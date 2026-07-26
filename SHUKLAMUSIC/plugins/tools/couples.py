@@ -42,7 +42,7 @@ POLICE = [
     [
         InlineKeyboardButton(
             text="Mᴀᴅᴀʀᴀ",
-            url=f"https://t.me/Egoist_Destroyer",
+            url=f"https://t.me/",
         ),
     ],
 ]
