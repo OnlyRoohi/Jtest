@@ -121,26 +121,36 @@ def stream_markup(_, chat_id):
             InlineKeyboardButton(
                 text="ᴘᴀᴜsᴇ",
                 callback_data=f"ADMIN Pause|{chat_id}",
-                style=ButtonStyle.PRIMARY
+                style=ButtonStyle.PRIMARY,
             ),
             InlineKeyboardButton(
-                text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"
-                style=ButtonStyle.PRIMARY
+                text="sᴋɪᴘ",
+                callback_data=f"ADMIN Skip|{chat_id}",
+                style=ButtonStyle.PRIMARY,
             ),
             InlineKeyboardButton(
-                text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"
-                style=ButtonStyle.PRIMARY
+                text="sᴛᴏᴘ",
+                callback_data=f"ADMIN Stop|{chat_id}",
+                style=ButtonStyle.PRIMARY,
             ),
         ],
         [
-            InlineKeyboardButton(text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}",style=ButtonStyle.DANGER),
-            InlineKeyboardButton(text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}",style=ButtonStyle.DANGER),
+            InlineKeyboardButton(
+                text="ʀᴇsᴜᴍᴇ",
+                callback_data=f"ADMIN Resume|{chat_id}",
+                style=ButtonStyle.DANGER,
+            ),
+            InlineKeyboardButton(
+                text="ʀᴇᴘʟᴀʏ",
+                callback_data=f"ADMIN Replay|{chat_id}",
+                style=ButtonStyle.DANGER,
+            ),
         ],
         [
             InlineKeyboardButton(
-                text=f"⛦ ᴊᴏɪɴ ⛦",
-              url="https://t.me/+dv_rcq5uIXhmMWM1",
-                style=ButtonStyle.SUCCESS
+                text="⛦ ᴊᴏɪɴ ⛦",
+                url="https://t.me/+dv_rcq5uIXhmMWM1",
+                style=ButtonStyle.SUCCESS,
             ),
         ],
     ]
