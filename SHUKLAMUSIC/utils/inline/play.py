@@ -114,43 +114,28 @@ def stream_markup(_, chat_id):
             InlineKeyboardButton(
                 text=_["➕ IηTЄGЯATЄ Iη YOƱЯ CHΛT ➕"],
                 url=f"https://t.me/{app.username}?startgroup=true",
-                style=ButtonStyle.DANGER
             ),
           ],
           [
             InlineKeyboardButton(
                 text="ᴘᴀᴜsᴇ",
                 callback_data=f"ADMIN Pause|{chat_id}",
-                style=ButtonStyle.PRIMARY,
             ),
             InlineKeyboardButton(
-                text="sᴋɪᴘ",
-                callback_data=f"ADMIN Skip|{chat_id}",
-                style=ButtonStyle.PRIMARY,
+                text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"
             ),
             InlineKeyboardButton(
-                text="sᴛᴏᴘ",
-                callback_data=f"ADMIN Stop|{chat_id}",
-                style=ButtonStyle.PRIMARY,
+                text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"
             ),
         ],
         [
-            InlineKeyboardButton(
-                text="ʀᴇsᴜᴍᴇ",
-                callback_data=f"ADMIN Resume|{chat_id}",
-                style=ButtonStyle.DANGER,
-            ),
-            InlineKeyboardButton(
-                text="ʀᴇᴘʟᴀʏ",
-                callback_data=f"ADMIN Replay|{chat_id}",
-                style=ButtonStyle.DANGER,
-            ),
+            InlineKeyboardButton(text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton(text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}"),
         ],
         [
             InlineKeyboardButton(
-                text="⛦ ᴊᴏɪɴ ⛦",
-                url="https://t.me/+dv_rcq5uIXhmMWM1",
-                style=ButtonStyle.SUCCESS,
+                text=f"⛦ ᴊᴏɪɴ ⛦",
+              url="https://t.me/",
             ),
         ],
     ]
