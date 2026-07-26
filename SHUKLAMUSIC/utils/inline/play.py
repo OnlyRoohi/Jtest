@@ -1,17 +1,3 @@
-# -----------------------------------------------
-# 🔸 StrangerMusic Project
-# 🔹 Developed & Maintained by: Shashank Shukla (https://github.com/itzshukla)
-# 📅 Copyright © 2022 – All Rights Reserved
-#
-# 📖 License:
-# This source code is open for educational and non-commercial use ONLY.
-# You are required to retain this credit in all copies or substantial portions of this file.
-# Commercial use, redistribution, or removal of this notice is strictly prohibited
-# without prior written permission from the author.
-#
-# ❤️ Made with dedication and love by ItzShukla
-# -------------------------------------
-
 import math
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from SHUKLAMUSIC import app
@@ -20,25 +6,42 @@ from pyrogram.enums import ButtonStyle
 from SHUKLAMUSIC.utils.formatters import time_to_seconds
 
 
+
 def track_markup(_, videoid, user_id, channel, fplay):
     buttons = [
+
         [
+            InlineKeyboardButton(
+                text=_["S_B_5"],
+                url=f"https://t.me/{app.username}?startgroup=true",
+                style=ButtonStyle.DANGER
+            ),
+            ],
+            [
             InlineKeyboardButton(
                 text=_["P_B_1"],
                 callback_data=f"MusicStream {videoid}|{user_id}|a|{channel}|{fplay}",
+                style=ButtonStyle.PRIMARY
             ),
             InlineKeyboardButton(
                 text=_["P_B_2"],
                 callback_data=f"MusicStream {videoid}|{user_id}|v|{channel}|{fplay}",
+                style=ButtonStyle.PRIMARY
             ),
         ],
         [
+            InlineKeyboardButton(text="Replay", callback_data=f"ADMIN Replay|{chat_id}"),
+            InlineKeyboardButton(text="End", callback_data=f"ADMIN Stop|{chat_id}"),
+        ],
+        [
             InlineKeyboardButton(
-                text=_["CLOSE_BUTTON"],
-                callback_data=f"forceclose {videoid}|{user_id}",
-            )
+                text=f"⛦ ᴊᴏɪɴ ⛦",
+              url="https://t.me/+dv_rcq5uIXhmMWM1",
+                style=ButtonStyle.SUCCESS
+            ),
         ],
     ]
+
     return buttons
 
 
@@ -46,118 +49,120 @@ def stream_markup_timer(_, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
-    
     umm = math.floor(percentage)
     if 0 < umm <= 10:
-        bar = "▣—————————"
+        bar = "◉—————————"
     elif 10 < umm < 20:
-        bar = "—▣————————"
+        bar = "—◉————————"
     elif 20 <= umm < 30:
-        bar = "—▣———————"
+        bar = "——◉———————"
     elif 30 <= umm < 40:
-        bar = "——▣——————"
+        bar = "———◉——————"
     elif 40 <= umm < 50:
-        bar = "———▣—————"
+        bar = "————◉—————"
     elif 50 <= umm < 60:
-        bar = "————▣————"
+        bar = "—————◉————"
     elif 60 <= umm < 70:
-        bar = "—————▣———"
+        bar = "——————◉———"
     elif 70 <= umm < 80:
-        bar = "——————▣——"
+        bar = "———————◉——"
     elif 80 <= umm < 95:
-        bar = "———————▣—"
+        bar = "————————◉—"
     else:
-        bar = "————————▣"
-    buttons = [
+        bar = "—————————◉"
+        
+    buttons  = [
+
         [
             InlineKeyboardButton(
-                text=f"{played} {bar} {dur}",
-                callback_data="GetTimer",
-                style=ButtonStyle.PRIMARY,
-                icon_custom_emoji_id=5204046146955153467
-            )
-        ],
-        [
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331, style=ButtonStyle.PRIMARY),
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
-        ],
-        [
+                text=_["S_B_5"],
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
+          ],
+          [
             InlineKeyboardButton(
-                text="ᴀᴜᴛᴏᴘʟᴀʏ",
-                callback_data=f"ADMIN Autoplay|{chat_id}",
-                icon_custom_emoji_id=6271653280187684816,
-                style=ButtonStyle.PRIMARY,
+                text="ᴘᴀᴜsᴇ",
+                callback_data=f"ADMIN Pause|{chat_id}",
+            ),
+            InlineKeyboardButton(
+                text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"
+            ),
+            InlineKeyboardButton(
+                text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"
             ),
         ],
         [
+            InlineKeyboardButton(text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton(text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}"),
+        ],
+        [
             InlineKeyboardButton(
-                text="ᴜᴘᴅᴀᴛᴇ",
-                url=config.SUPPORT_CHANNEL,
-                icon_custom_emoji_id=5409025823388741707,
+                text=f"⛦ ᴊᴏɪɴ ⛦",
+              url="https://t.me/+dv_rcq5uIXhmMWM1",
                 style=ButtonStyle.SUCCESS
             ),
-            InlineKeyboardButton(
-                text="sᴜᴘᴘᴏꝛᴛ",
-                url=config.SUPPORT_CHAT,
-                icon_custom_emoji_id=5409194306365829029,
-                style=ButtonStyle.PRIMARY
-            )
         ],
-        [InlineKeyboardButton(text=" ᴄʟᴏsᴇ ▣", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
     ]
+
     return buttons
 
 
 def stream_markup(_, chat_id):
-    buttons = [
-        [
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Resume|{chat_id}", icon_custom_emoji_id=5409222721869459068, style=ButtonStyle.SUCCESS),
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Pause|{chat_id}", icon_custom_emoji_id=5409042015415448331, style=ButtonStyle.PRIMARY),
-            InlineKeyboardButton(text="", callback_data=f"ADMIN Stop|{chat_id}", icon_custom_emoji_id=5408832111773757273, style=ButtonStyle.DANGER),
-        ],
+    buttons  = [
+
         [
             InlineKeyboardButton(
-                text="ᴀᴜᴛᴏᴘʟᴀʏ",
-                callback_data=f"ADMIN Autoplay|{chat_id}",
-                icon_custom_emoji_id=6271653280187684816,
-                style=ButtonStyle.PRIMARY,
+                text=_["S_B_5"],
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
+          ],
+          [
+            InlineKeyboardButton(
+                text="ᴘᴀᴜsᴇ",
+                callback_data=f"ADMIN Pause|{chat_id}",
+            ),
+            InlineKeyboardButton(
+                text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"
+            ),
+            InlineKeyboardButton(
+                text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"
             ),
         ],
         [
+            InlineKeyboardButton(text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton(text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}"),
+        ],
+        [
             InlineKeyboardButton(
-                text="ᴜᴘᴅᴀᴛᴇ",
-                url=config.SUPPORT_CHANNEL,
-                icon_custom_emoji_id=5409025823388741707,
+                text=f"⛦ ᴊᴏɪɴ ⛦",
+              url="https://t.me/+dv_rcq5uIXhmMWM1",
                 style=ButtonStyle.SUCCESS
             ),
-            InlineKeyboardButton(
-                text="sᴜᴘᴘᴏꝛᴛ",
-                url=config.SUPPORT_CHAT,
-                icon_custom_emoji_id=5409194306365829029,
-                style=ButtonStyle.PRIMARY
-            )
         ],
-        [InlineKeyboardButton(text=" ᴄʟᴏsᴇ ▣", callback_data="close", style=ButtonStyle.DANGER, icon_custom_emoji_id=5408832111773757273)],
     ]
+
     return buttons
+
 
 def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
     buttons = [
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
-                callback_data=f"SHUKLAPlaylists {videoid}|{user_id}|{ptype}|a|{channel}|{fplay}",
+                callback_data=f"VIPPlaylists {videoid}|{user_id}|{ptype}|a|{channel}|{fplay}",
+                style=ButtonStyle.DANGER
             ),
             InlineKeyboardButton(
                 text=_["P_B_2"],
-                callback_data=f"SHUKLAPlaylists {videoid}|{user_id}|{ptype}|v|{channel}|{fplay}",
+                callback_data=f"VIPPlaylists {videoid}|{user_id}|{ptype}|v|{channel}|{fplay}",
+                style=ButtonStyle.PRIMARY
             ),
         ],
         [
             InlineKeyboardButton(
                 text=_["CLOSE_BUTTON"],
                 callback_data=f"forceclose {videoid}|{user_id}",
+                style=ButtonStyle.DANGER
             ),
         ],
     ]
@@ -166,6 +171,16 @@ def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
 
 def livestream_markup(_, videoid, user_id, mode, channel, fplay):
     buttons = [
+        [
+           InlineKeyboardButton(
+
+                text=_["S_B_5"],
+
+                url=f"https://t.me/{app.username}?startgroup=true",
+
+            ),
+
+        ],
         [
             InlineKeyboardButton(
                 text=_["P_B_3"],
@@ -185,6 +200,16 @@ def livestream_markup(_, videoid, user_id, mode, channel, fplay):
 def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
     query = f"{query[:20]}"
     buttons = [
+        [
+           InlineKeyboardButton(
+
+                text=_["S_B_5"],
+
+                url=f"https://t.me/{app.username}?startgroup=true",
+
+            ),
+
+        ],
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
@@ -209,5 +234,91 @@ def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
                 callback_data=f"slider F|{query_type}|{query}|{user_id}|{channel}|{fplay}",
             ),
         ],
-    ]
+     ]
     return buttons
+
+        
+## Queue Markup
+
+def queue_markup(_, videoid, chat_id):
+
+    buttons = [
+        [
+            InlineKeyboardButton(
+                text=_["S_B_5"],
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
+            ],
+            [
+            InlineKeyboardButton(
+                text="ᴘᴀᴜsᴇ",
+                callback_data=f"ADMIN Pause|{chat_id}",
+            ),
+            InlineKeyboardButton(
+                text="sᴋɪᴘ", callback_data=f"ADMIN Skip|{chat_id}"
+            ),
+            InlineKeyboardButton(
+                text="sᴛᴏᴘ", callback_data=f"ADMIN Stop|{chat_id}"
+            ),
+        ],
+        [
+            InlineKeyboardButton(text="ʀᴇsᴜᴍᴇ", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton(text="ʀᴇᴘʟᴀʏ", callback_data=f"ADMIN Replay|{chat_id}"),
+        ],
+        [
+            InlineKeyboardButton(
+                text=f"⛦ ᴊᴏɪɴ ⛦",
+              url="https://t.me/+dv_rcq5uIXhmMWM1",
+            ),
+        ],
+    ]
+
+    return buttons
+
+def speed_markup(_, chat_id):
+    upl = InlineKeyboardMarkup(
+        buttons = [
+        [
+            [
+                InlineKeyboardButton(
+                    text="🕒 0.5x",
+                    callback_data=f"SpeedUP {chat_id}|0.5",
+                ),
+                InlineKeyboardButton(
+                    text="🕓 0.75x",
+                    callback_data=f"SpeedUP {chat_id}|0.75",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text=_["P_B_4"],
+                    callback_data=f"SpeedUP {chat_id}|1.0",
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text="🕤 1.5x",
+                    callback_data=f"SpeedUP {chat_id}|1.5",
+                ),
+                InlineKeyboardButton(
+                    text="🕛 2.0x",
+                    callback_data=f"SpeedUP {chat_id}|2.0",
+                ),
+            ],
+                    [
+            InlineKeyboardButton(text="sᴘᴇᴇᴅ", callback_data=f"ADMIN speed|{chat_id}"),
+        ],
+        [
+            InlineKeyboardButton(
+                text=f"⛦ ᴊᴏɪɴ ⛦",
+              url="https://t.me/+dv_rcq5uIXhmMWM1",
+            ),
+        ],
+    ]
+    
+    
+        ]
+                )
+                
+    return buttons
+                                 
