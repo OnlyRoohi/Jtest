@@ -29,7 +29,7 @@ _AP_LILAC  = 5366119022792294762   # 💜
 _AP_SPARK  = 5343528160535270636   # ⚡️
 
 def ap(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>' 
+    return fb 
 
 
 @app.on_message(filters.command("wish"))

@@ -33,7 +33,7 @@ _KE_FIRE   = 6129792056589031358   # 🔥
 _KE_OK     = 6129705667616841573   # 👍
 
 def ke(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 def mention(user, name, mention=True):
     if mention:

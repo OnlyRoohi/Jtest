@@ -19,7 +19,7 @@ _E_CLOVER = 6070904537382654893
 _E_PARTY  = 6073153120265835101
 
 def e(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 COINGECKO_URL = "https://api.coingecko.com/api/v3/simple/price"
 TONCENTER_URL = "https://tonapi.io/v2/accounts/{address}"

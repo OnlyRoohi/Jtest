@@ -77,7 +77,7 @@ WORD_BANK = [
 
 PURPLE_TOP = (88, 24, 138)
 PURPLE_BOTTOM = (35, 8, 66)
-BRAND_TEXT = "RADHA MUSIC"
+BRAND_TEXT = "RAJSHREE MUSIC"
 
 
 def _purple_canvas(size=(800, 400)):
@@ -199,7 +199,6 @@ async def start_word_game(chat_id):
                     text=f"🏳️ {smallcaps('Give Up')}",
                     callback_data=f"giveup_{chat_id}",
                     style=ButtonStyle.DANGER,
-                    icon_custom_emoji_id=_E_GIVEUP,
                 )]]
             )
 
@@ -268,7 +267,6 @@ async def start_flag_game(chat_id):
                 text=smallcaps(c["name"]),
                 callback_data=f"flg_{chat_id}_{c['code']}",
                 style=ButtonStyle.PRIMARY,
-                icon_custom_emoji_id=_E_WIN,
             ))
             if len(row) == 2:
                 rows.append(row)
@@ -303,7 +301,6 @@ async def send_claim(client, chat_id, success_text):
             text=f"💓 {smallcaps('Play More in DM')}",
             url=f"https://t.me/{app.username}?start=chatfight",
             style=ButtonStyle.SUCCESS,
-            icon_custom_emoji_id=_E_CLAIM,
         )]]
     )
     await client.send_message(chat_id, success_text, reply_markup=markup)
@@ -550,7 +547,6 @@ async def start_trivia_battle(client, message: Message):
             text=f"⚔️ {battle_smallcaps('Join Battle')}",
             callback_data=f"battlejoin_{chat_id}",
             style=ButtonStyle.SUCCESS,
-            icon_custom_emoji_id=_E_JOIN,
         )]]
     )
     intro = await message.reply_text(
@@ -614,7 +610,6 @@ async def run_trivia_round(client, chat_id):
             text=f"{letters[idx]}. {opt}",
             callback_data=f"battleans_{chat_id}_{idx}",
             style=[ButtonStyle.PRIMARY, ButtonStyle.SUCCESS, ButtonStyle.DANGER, ButtonStyle.PRIMARY][idx],
-            icon_custom_emoji_id=emoji_map[idx],
         )])
 
     round_label = battle_smallcaps(f"Round {battle['round']}/5")

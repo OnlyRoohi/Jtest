@@ -28,7 +28,7 @@ _AP_ORANGE = 5366238787955347845   # 🧡
 _AP_BLUE   = 5379853726909486003   # 💙
 
 def ap(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 def get_random_message(love_percentage):
     if love_percentage <= 30:

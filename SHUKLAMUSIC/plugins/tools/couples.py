@@ -36,7 +36,7 @@ _AP_GREEN  = 5366596996817766990   # 💚
 _AP_SPARK  = 5343528160535270636   # ⚡️
 
 def ap(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 POLICE = [
     [

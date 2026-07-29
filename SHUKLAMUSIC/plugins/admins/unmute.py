@@ -21,7 +21,7 @@ _KE_OK   = 6129812419028982717   # ✅
 _KE_WARN = 6129782440157256336   # ⚠️
 
 def ke(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 @app.on_message(filters.command("unmuteall") & admin_filter)
 async def unmute_all(_,msg):

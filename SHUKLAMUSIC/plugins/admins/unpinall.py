@@ -33,7 +33,7 @@ _KE_BLOCK = 6129840374971112593   # 🚫
 _KE_FIRE  = 6129792056589031358   # 🔥
 
 def ke(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 
 @app.on_callback_query(filters.regex(r"^unpin"))

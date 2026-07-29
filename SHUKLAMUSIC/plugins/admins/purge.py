@@ -27,7 +27,7 @@ _KE_FIRE  = 6129792056589031358   # 🔥
 _KE_SKULL = 6132184924603554220   # 💀
 
 def ke(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 
 @app.on_message(filters.command("purge") & admin_filter)

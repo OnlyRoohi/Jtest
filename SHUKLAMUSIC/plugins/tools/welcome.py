@@ -43,7 +43,7 @@ _TX_GEM    = 6244241334320762892   # 💎
 _TX_ROSE   = 6102617459204822706   # 🌹
 
 def tx(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 random_photo = [
     "https://telegra.ph/file/1949480f01355b4e87d26.jpg",

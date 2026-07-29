@@ -52,7 +52,6 @@ async def start_dice_battle(client, message: Message):
             text=f"🎲 {_sc('Roll to Join')}",
             callback_data=f"dice_join_{chat_id}",
             style=ButtonStyle.SUCCESS,
-            icon_custom_emoji_id=_E_DICE,
         )
     ]])
     msg = await message.reply_text(
@@ -222,7 +221,6 @@ async def start_roulette(client, message: Message):
             text=f"🎡 {_sc('Join Roulette')}",
             callback_data=f"roulette_join_{chat_id}",
             style=ButtonStyle.DANGER,
-            icon_custom_emoji_id=_E_GUN,
         )
     ]])
     msg = await message.reply_text(
@@ -249,7 +247,6 @@ async def start_roulette(client, message: Message):
             text=f"🔫 {_sc('Pull the Trigger')}",
             callback_data=f"roulette_pull_{chat_id}",
             style=ButtonStyle.DANGER,
-            icon_custom_emoji_id=_E_GUN,
         )
     ]])
     turn_user = game["players"][0]
@@ -329,7 +326,6 @@ async def roulette_pull_callback(client, callback_query):
                 text=f"🔫 {_sc('Pull the Trigger')}",
                 callback_data=f"roulette_pull_{chat_id}",
                 style=ButtonStyle.DANGER,
-                icon_custom_emoji_id=_E_GUN,
             )
         ]])
         await callback_query.answer(f"✅ Click! Safe... {remaining} chambers left.", show_alert=True)

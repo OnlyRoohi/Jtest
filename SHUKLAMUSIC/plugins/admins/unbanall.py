@@ -23,7 +23,7 @@ _KE_WARN  = 6129782440157256336   # ⚠️
 _KE_ANGEL = 6129518870899203008   # 👼
 
 def ke(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 BOT_ID = "6824607634"
 

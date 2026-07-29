@@ -87,7 +87,7 @@ HOT_TOPICS = [
 
 
 def e(eid: int, fb: str) -> str:
-    return f"<emoji id={eid}>{fb}</emoji>"
+    return fb
 
 
 # ════════════════════════════════════════════════════════════

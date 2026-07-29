@@ -30,7 +30,7 @@ _KE_ELITE  = 6129509499280563691   # 💎
 _KE_ANGEL  = 6129518870899203008   # 👼
 
 def ke(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 def mention(user_id, name):
     return f"[{name}](tg://user?id={user_id})"

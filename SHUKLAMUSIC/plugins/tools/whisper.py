@@ -124,7 +124,7 @@ async def in_help():
         InlineQueryResultArticle(
             title="💒 Whisper",
             description=f"@SapnaMusicRobot [USERNAME | ID] [TEXT]",
-            input_message_content=InputTextMessageContent(f"**📍Usage:**\n\n@RADHA_MUSIC_GMS_op_bot (Target Username or ID) (Your Message).\n\n**Example:**\n@RADHA_MUSIC_GMS_op_bot @username I Wanna Phuck You"),
+            input_message_content=InputTextMessageContent(f"**📍Usage:**\n\n@RAJSHREE_MUSIC_GMS_op_bot (Target Username or ID) (Your Message).\n\n**Example:**\n@RAJSHREE_MUSIC_GMS_op_bot @username I Wanna Send You A Message"),
             thumb_url="https://files.catbox.moe/gaz9cc.jpg",
             reply_markup=switch_btn
         )

@@ -26,7 +26,7 @@ _E_GIFT = 5190811712038661224   # 🎁 Monochrome_Black_Style
 
 
 def e(eid, fb):
-    return f"<emoji id={eid}>{fb}</emoji>"
+    return fb
 
 
 async def get_token(user_id: int):

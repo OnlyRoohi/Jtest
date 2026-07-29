@@ -21,7 +21,7 @@ _E_ERR = 5978715546865112655    # 🚩
 
 
 def e(eid, fb):
-    return f"<emoji id={eid}>{fb}</emoji>"
+    return fb
 
 
 CB_HELP = f"""

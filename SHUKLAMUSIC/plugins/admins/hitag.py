@@ -27,7 +27,7 @@ _KE_BLOCK = 6129840374971112593   # 🚫
 _KE_STAR  = 6129915811776698328   # 🌟
 
 def ke(eid, fb):
-    return f'<emoji id={eid}>{fb}</emoji>'
+    return fb
 
 spam_chats = []
 

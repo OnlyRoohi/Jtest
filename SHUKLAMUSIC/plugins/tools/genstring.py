@@ -35,7 +35,7 @@ _TYPES = {
 
 
 def e(eid: int, fb: str) -> str:
-    return f"<emoji id={eid}>{fb}</emoji>"
+    return fb
 
 
 def _type_buttons() -> InlineKeyboardMarkup:
@@ -45,13 +45,11 @@ def _type_buttons() -> InlineKeyboardMarkup:
                 f"⭐ ᴘʏʀᴏ ᴠ1",
                 callback_data="gstr_pyro1",
                 style=ButtonStyle.DANGER,
-                icon_custom_emoji_id=_E_STAR,
             ),
             InlineKeyboardButton(
                 f"✨ ᴘʏʀᴏ ᴠ2",
                 callback_data="gstr_pyro2",
                 style=ButtonStyle.SUCCESS,
-                icon_custom_emoji_id=_E_KEY,
             ),
         ],
         [
@@ -59,13 +57,11 @@ def _type_buttons() -> InlineKeyboardMarkup:
                 f"⚡ ᴛᴇʟᴇᴛʜᴏɴ",
                 callback_data="gstr_telethon",
                 style=ButtonStyle.PRIMARY,
-                icon_custom_emoji_id=_E_BOLT,
             ),
             InlineKeyboardButton(
                 f"🤖 ʙᴏᴛ sᴇssɪᴏɴ",
                 callback_data="gstr_botstr",
                 style=ButtonStyle.DANGER,
-                icon_custom_emoji_id=_E_BOT,
             ),
         ],
         [
@@ -73,7 +69,6 @@ def _type_buttons() -> InlineKeyboardMarkup:
                 f"❌ ᴄᴀɴᴄᴇʟ",
                 callback_data="gstr_cancel",
                 style=ButtonStyle.DANGER,
-                icon_custom_emoji_id=_E_WARN,
             ),
         ],
     ])
