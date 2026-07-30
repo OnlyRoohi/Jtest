@@ -3,6 +3,13 @@
 # 🔹 Direct yt-dlp backend (no external API)
 #    Cookie rotation • Async thread download
 #    Zero-lag, 24-hour uptime
+# ------------------------------------------
+
+# -----------------------------------------------
+# 🔸 RAJSHREE MUSIC — YouTube Platform
+# 🔹 Direct yt-dlp backend (no external API)
+#    Cookie rotation • Async thread download
+#    Zero-lag, 24-hour uptime
 # -----------------------------------------------
 
 import asyncio
