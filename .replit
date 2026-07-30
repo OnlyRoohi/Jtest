@@ -5,7 +5,7 @@ stack = "BEST_EFFORT_FALLBACK"
 
 [nix]
 channel = "stable-25_05"
-packages = ["cacert", "espeak-ng", "exiftool", "ffmpeg-full", "freetype", "ghostscript", "gmp", "imagemagickBig", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "libyaml", "mupdf", "netpbm", "openjpeg", "poppler_utils", "rapidfuzz-cpp", "taskflow", "tcl", "tk", "zlib"]
+packages = ["cacert", "espeak-ng", "exiftool", "ffmpeg-full", "freetype", "ghostscript", "gmp", "imagemagickBig", "lcms2", "libGL", "libGLU", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "libyaml", "mupdf", "netpbm", "openjpeg", "openssl", "poppler_utils", "rapidfuzz-cpp", "taskflow", "tcl", "tk", "zlib"]
 
 [workflows]
 runButton = "Project"
@@ -25,11 +25,11 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "python3 -m SHUKLAMUSIC"
+args = "python3 -m MADARAMUSIC"
 
 [workflows.workflow.metadata]
 outputType = "console"
 
 [deployment]
 deploymentTarget = "vm"
-run = ["python3", "-m", "SHUKLAMUSIC"]
+run = ["python3", "-m", "MADARAMUSIC"]
