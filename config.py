@@ -102,8 +102,8 @@ START_IMG_URLS = (
     else [getenv("START_IMG_URL", "https://files.catbox.moe/5go4t6.jpg")]
 )
 
-START_IMG_URL           = getenv("START_IMG_URL",    "https://files.catbox.moe/5go4t6.jpg")
-PING_IMG_URL            = getenv("PING_IMG_URL",     "https://files.catbox.moe/ohezme.jpg")
+START_IMG_URL           = getenv("START_IMG_URL",    "https://files.catbox.moe/aqzdyz.jpg")
+PING_IMG_URL            = getenv("PING_IMG_URL",     "https://files.catbox.moe/aqzdyz.jpg")
 PLAYLIST_IMG_URL        = "https://files.catbox.moe/ohezme.jpg"
 STATS_IMG_URL           = "https://files.catbox.moe/ohezme.jpg"
 TELEGRAM_AUDIO_URL      = "https://files.catbox.moe/ohezme.jpg"
