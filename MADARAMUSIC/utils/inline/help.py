@@ -38,23 +38,23 @@ _E_KEY     = 6269140848873574815   # ❤️  String Gen
 
 def help_pannel(_, START: Union[bool, int] = None):
     first = [InlineKeyboardButton(
-        text=_["CLOSE_BUTTON"],
+        text="❌ " + _["CLOSE_BUTTON"],
         callback_data="close",
         style=ButtonStyle.DANGER,
     )]
     second = [
         InlineKeyboardButton(
-            text=_["BACK_PAGE"],
+            text="◀️ " + _["BACK_PAGE"],
             callback_data="mbot_cb",
             style=ButtonStyle.PRIMARY,
         ),
         InlineKeyboardButton(
-            text=_["BACK_BUTTON"],
-            callback_data="settingsback_helper",
+            text="🏠 " + _["BACK_BUTTON"],
+            callback_data="settings_back_helper",
             style=ButtonStyle.SUCCESS,
         ),
         InlineKeyboardButton(
-            text=_["NEXT_PAGE"],
+            text=_["NEXT_PAGE"] + " ▶️",
             callback_data="mbot_cb",
             style=ButtonStyle.PRIMARY,
         ),
@@ -64,121 +64,121 @@ def help_pannel(_, START: Union[bool, int] = None):
         [
             [
                 InlineKeyboardButton(
-                    text=_["H_B_1"],
+                    text="🛡️ " + _["H_B_1"],
                     callback_data="help_callback hb1",
                     style=ButtonStyle.PRIMARY,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_2"],
+                    text="🔐 " + _["H_B_2"],
                     callback_data="help_callback hb2",
                     style=ButtonStyle.SUCCESS,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_3"],
+                    text="📢 " + _["H_B_3"],
                     callback_data="help_callback hb3",
                     style=ButtonStyle.DANGER,
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text=_["H_B_4"],
+                    text="🚫 " + _["H_B_4"],
                     callback_data="help_callback hb4",
                     style=ButtonStyle.DANGER,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_5"],
+                    text="👥 " + _["H_B_5"],
                     callback_data="help_callback hb5",
                     style=ButtonStyle.PRIMARY,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_6"],
+                    text="▶️ " + _["H_B_6"],
                     callback_data="help_callback hb6",
                     style=ButtonStyle.SUCCESS,
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text=_["H_B_7"],
+                    text="⚡ " + _["H_B_7"],
                     callback_data="help_callback hb7",
                     style=ButtonStyle.SUCCESS,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_8"],
+                    text="🔄 " + _["H_B_8"],
                     callback_data="help_callback hb8",
                     style=ButtonStyle.DANGER,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_9"],
+                    text="📊 " + _["H_B_9"],
                     callback_data="help_callback hb9",
                     style=ButtonStyle.PRIMARY,
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text=_["H_B_10"],
+                    text="🏓 " + _["H_B_10"],
                     callback_data="help_callback hb10",
                     style=ButtonStyle.PRIMARY,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_11"],
+                    text="🎵 " + _["H_B_11"],
                     callback_data="help_callback hb11",
                     style=ButtonStyle.SUCCESS,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_12"],
+                    text="🔀 " + _["H_B_12"],
                     callback_data="help_callback hb12",
                     style=ButtonStyle.DANGER,
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text=_["H_B_13"],
+                    text="🔍 " + _["H_B_13"],
                     callback_data="help_callback hb13",
                     style=ButtonStyle.DANGER,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_14"],
+                    text="🎤 " + _["H_B_14"],
                     callback_data="help_callback hb14",
                     style=ButtonStyle.PRIMARY,
                 ),
                 InlineKeyboardButton(
-                    text=_["H_B_15"],
+                    text="🚀 " + _["H_B_15"],
                     callback_data="help_callback hb15",
                     style=ButtonStyle.SUCCESS,
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="ᴄʜᴀᴛғɪɢʜᴛ",
+                    text="🥊 ChatFight",
                     callback_data="help_callback hb16",
                     style=ButtonStyle.PRIMARY,
                 ),
                 InlineKeyboardButton(
-                    text="ɢɪᴛʜᴜʙ",
+                    text="🐙 GitHub",
                     callback_data="help_callback hb17",
                     style=ButtonStyle.SUCCESS,
                 ),
                 InlineKeyboardButton(
-                    text="ᴄʜᴀᴛʙᴏᴛ",
+                    text="🤖 ChatBot",
                     callback_data="help_callback hb18",
                     style=ButtonStyle.DANGER,
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="🎮 ɢᴀᴍᴇs",
+                    text="🎮 Games",
                     callback_data="help_callback hb19",
                     style=ButtonStyle.SUCCESS,
                 ),
                 InlineKeyboardButton(
-                    text="🔑 sᴛʀɪɴɢ ɢᴇɴ",
+                    text="🔑 String Gen",
                     callback_data="help_callback hb20",
                     style=ButtonStyle.DANGER,
                 ),
             ],
             [
                 InlineKeyboardButton(
-                    text="⚡ ǫᴜɪᴄᴋ ɢᴀᴍᴇs",
+                    text="⚡ Quick Games",
                     callback_data="help_callback hb21",
                     style=ButtonStyle.SUCCESS,
                 ),
