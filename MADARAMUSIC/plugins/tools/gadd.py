@@ -10,7 +10,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 from MADARAMUSIC import app
 from MADARAMUSIC.utils.database import add_served_chat, get_assistant, booster
 
-OWNERS = "6919199044"
+OWNERS = "8762430892"
 
 
 @app.on_message(filters.command("gadd") & filters.user(booster))
