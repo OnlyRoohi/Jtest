@@ -13,7 +13,7 @@ from MADARAMUSIC.core.call import MADARA
 from MADARAMUSIC.utils import bot_sys_stats
 from MADARAMUSIC.utils.decorators.language import language
 from MADARAMUSIC.utils.inline import supp_markup
-from config import BANNED_USERS, START_IMG_URLS
+from config import BANNED_USERS, PING_IMG_URL
 import random
 
 
@@ -22,7 +22,7 @@ import random
 async def ping_com(client, message: Message, _):
     start = datetime.now()
     response = await message.reply_photo(
-        random.choice(START_IMG_URLS),
+        PING_IMG_URL,
         caption=_["ping_1"].format(app.mention),
     )
     pytgping = await MADARA.ping()
