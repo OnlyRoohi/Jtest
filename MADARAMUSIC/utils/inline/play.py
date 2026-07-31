@@ -69,22 +69,49 @@ def stream_markup_timer(_, chat_id, played, dur):
             )
         ],
         [
+            InlineKeyboardButton(
+                text="⏸ Pause",
+                callback_data=f"ADMIN Pause|{chat_id}",
+                style=ButtonStyle.DANGER,
+            ),
+            InlineKeyboardButton(
+                text="▶️ Resume",
+                callback_data=f"ADMIN Resume|{chat_id}",
+                style=ButtonStyle.SUCCESS,
+            ),
         ],
         [
             InlineKeyboardButton(
-                text="ᴀᴜᴛᴏᴘʟᴀʏ",
+                text="⏭ Skip",
+                callback_data=f"ADMIN Skip|{chat_id}",
+                style=ButtonStyle.PRIMARY,
+            ),
+            InlineKeyboardButton(
+                text="⏹ End",
+                callback_data=f"ADMIN End|{chat_id}",
+                style=ButtonStyle.DANGER,
+            ),
+            InlineKeyboardButton(
+                text="❌ Close",
+                callback_data="close",
+                style=ButtonStyle.DANGER,
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="🔁 Autoplay",
                 callback_data=f"ADMIN Autoplay|{chat_id}",
                 style=ButtonStyle.PRIMARY,
             ),
         ],
         [
             InlineKeyboardButton(
-                text="ᴜᴘᴅᴀᴛᴇ",
+                text="🔔 ᴜᴘᴅᴀᴛᴇ",
                 url=config.SUPPORT_CHANNEL,
                 style=ButtonStyle.SUCCESS
             ),
             InlineKeyboardButton(
-                text="sᴜᴘᴘᴏꝛᴛ",
+                text="💬 sᴜᴘᴘᴏꝛᴛ",
                 url=config.SUPPORT_CHAT,
                 style=ButtonStyle.PRIMARY
             )
@@ -96,22 +123,49 @@ def stream_markup_timer(_, chat_id, played, dur):
 def stream_markup(_, chat_id):
     buttons = [
         [
+            InlineKeyboardButton(
+                text="⏸ Pause",
+                callback_data=f"ADMIN Pause|{chat_id}",
+                style=ButtonStyle.DANGER,
+            ),
+            InlineKeyboardButton(
+                text="▶️ Resume",
+                callback_data=f"ADMIN Resume|{chat_id}",
+                style=ButtonStyle.SUCCESS,
+            ),
         ],
         [
             InlineKeyboardButton(
-                text="ᴀᴜᴛᴏᴘʟᴀʏ",
+                ext="⏭ Skip",
+                callback_data=f"ADMIN Skip|{chat_id}",
+                style=ButtonStyle.PRIMARY,
+            ),
+            InlineKeyboardButton(
+                text="⏹ End",
+                callback_data=f"ADMIN End|{chat_id}",
+                style=ButtonStyle.DANGER,
+            ),
+            InlineKeyboardButton(
+                text="❌ Close",
+                callback_data="close",
+                style=ButtonStyle.DANGER,
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="🔁 Autoplay",
                 callback_data=f"ADMIN Autoplay|{chat_id}",
                 style=ButtonStyle.PRIMARY,
             ),
         ],
         [
             InlineKeyboardButton(
-                text="ᴜᴘᴅᴀᴛᴇ",
+                text="🔔 Update",
                 url=config.SUPPORT_CHANNEL,
                 style=ButtonStyle.SUCCESS
             ),
             InlineKeyboardButton(
-                text="sᴜᴘᴘᴏꝛᴛ",
+                text="💬 Support",
                 url=config.SUPPORT_CHAT,
                 style=ButtonStyle.PRIMARY
             )
