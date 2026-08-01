@@ -56,7 +56,8 @@ def trim_to_width(text: str, font, max_w: int) -> str:
         if get_len(text[:i] + ellipsis) <= max_w:
             return text[:i] + ellipsis
     return ellipsis
-        async def get_thumb(videoid: str) -> str:
+
+async def get_thumb(videoid: str) -> str:
     cache_path = os.path.join(CACHE_DIR, f"{videoid}_v4.png")
     if os.path.exists(cache_path):
         return cache_path
@@ -101,6 +102,7 @@ def trim_to_width(text: str, font, max_w: int) -> str:
             
     except Exception:
         title, thumbnail, duration, views = "Unsupported Title", YOUTUBE_IMG_URL, None, "Unknown Views"
+
     is_live = not duration or str(duration).strip().lower() in {"", "live", "live now"}
     duration_text = "Live" if is_live else duration or "Unknown"
 
@@ -169,4 +171,4 @@ def trim_to_width(text: str, font, max_w: int) -> str:
                 pass
 
     return cache_path
-                       
+        
