@@ -41,21 +41,26 @@ ICONS_Y = BAR_Y + 48
 
 MAX_TITLE_WIDTH = 580
 
-def trim_to_width(text: str, font: ImageFont.FreeTypeFont, max_w: int) -> str:
+def trim_to_width(text: str, font, max_w: int) -> str:
+    if not text:
+        return "Unknown Title"
+    text = str(text)
     ellipsis = "…"
-    if font.getlength(text) <= max_w:
+    
+    def get_len(t):
+        return font.getlength(t) if hasattr(font, "getlength") else font.getsize(t)[0]
+
+    if get_len(text) <= max_w:
         return text
     for i in range(len(text) - 1, 0, -1):
-        if font.getlength(text[:i] + ellipsis) <= max_w:
+        if get_len(text[:i] + ellipsis) <= max_w:
             return text[:i] + ellipsis
     return ellipsis
-
-async def get_thumb(videoid: str) -> str:
+        async def get_thumb(videoid: str) -> str:
     cache_path = os.path.join(CACHE_DIR, f"{videoid}_v4.png")
     if os.path.exists(cache_path):
         return cache_path
 
-    # YouTube video data fetch — using yt-dlp directly for accurate metadata
     def _fetch_yt_info():
         opts = {
             "quiet": True,
@@ -73,13 +78,18 @@ async def get_thumb(videoid: str) -> str:
         info = await loop.run_in_executor(None, _fetch_yt_info)
         if not info:
             raise ValueError("No info returned")
-        raw_title = info.get("title") or "Unsupported Title"
+        
+        raw_title = str(info.get("title") or "Unsupported Title")
         title = re.sub(r"\W+", " ", raw_title).title()
-        thumbnail = info.get("thumbnail") or YOUTUBE_IMG_URL
-        dur_sec = int(info.get("duration") or 0)
+        thumbnail = str(info.get("thumbnail") or YOUTUBE_IMG_URL)
+        
+        dur_sec = info.get("duration")
+        dur_sec = int(dur_sec) if dur_sec else 0
         m, s = divmod(dur_sec, 60)
         duration = f"{m}:{s:02d}" if dur_sec else None
-        vc = int(info.get("view_count") or 0)
+        
+        vc = info.get("view_count")
+        vc = int(vc) if vc else 0
         if vc >= 1_000_000_000:
             views = f"{vc / 1_000_000_000:.1f}B views"
         elif vc >= 1_000_000:
@@ -88,13 +98,12 @@ async def get_thumb(videoid: str) -> str:
             views = f"{vc / 1_000:.1f}K views"
         else:
             views = f"{vc} views" if vc else "Unknown Views"
+            
     except Exception:
         title, thumbnail, duration, views = "Unsupported Title", YOUTUBE_IMG_URL, None, "Unknown Views"
-
     is_live = not duration or str(duration).strip().lower() in {"", "live", "live now"}
-    duration_text = "Live" if is_live else duration or "Unknown Mins"
+    duration_text = "Live" if is_live else duration or "Unknown"
 
-    # Download thumbnail
     thumb_path = os.path.join(CACHE_DIR, f"thumb{videoid}.png")
     try:
         async with aiohttp.ClientSession() as session:
@@ -103,61 +112,61 @@ async def get_thumb(videoid: str) -> str:
                     async with aiofiles.open(thumb_path, "wb") as f:
                         await f.write(await resp.read())
     except Exception:
-        return YOUTUBE_IMG_URL
+        pass 
 
     if not os.path.exists(thumb_path) or os.path.getsize(thumb_path) == 0:
         return YOUTUBE_IMG_URL
 
-    # Create base image
-    base = Image.open(thumb_path).resize((1280, 720)).convert("RGBA")
-    bg = ImageEnhance.Brightness(base.filter(ImageFilter.BoxBlur(10))).enhance(0.6)
-
-    # Frosted glass panel
-    panel_area = bg.crop((PANEL_X, PANEL_Y, PANEL_X + PANEL_W, PANEL_Y + PANEL_H))
-    overlay = Image.new("RGBA", (PANEL_W, PANEL_H), (255, 255, 255, TRANSPARENCY))
-    frosted = Image.alpha_composite(panel_area, overlay)
-    mask = Image.new("L", (PANEL_W, PANEL_H), 0)
-    ImageDraw.Draw(mask).rounded_rectangle((0, 0, PANEL_W, PANEL_H), 50, fill=255)
-    bg.paste(frosted, (PANEL_X, PANEL_Y), mask)
-
-    # Draw details
-    draw = ImageDraw.Draw(bg)
     try:
-        title_font = ImageFont.truetype("MADARAMUSIC/assets/assets/font2.ttf", 32)
-        regular_font = ImageFont.truetype("MADARAMUSIC/assets/assets/font.ttf", 18)
-    except OSError:
-        title_font = regular_font = ImageFont.load_default()
+        base = Image.open(thumb_path).resize((1280, 720)).convert("RGBA")
+        bg = ImageEnhance.Brightness(base.filter(ImageFilter.BoxBlur(10))).enhance(0.6)
 
-    thumb = base.resize((THUMB_W, THUMB_H))
-    tmask = Image.new("L", thumb.size, 0)
-    ImageDraw.Draw(tmask).rounded_rectangle((0, 0, THUMB_W, THUMB_H), 20, fill=255)
-    bg.paste(thumb, (THUMB_X, THUMB_Y), tmask)
+        panel_area = bg.crop((PANEL_X, PANEL_Y, PANEL_X + PANEL_W, PANEL_Y + PANEL_H))
+        overlay = Image.new("RGBA", (PANEL_W, PANEL_H), (255, 255, 255, TRANSPARENCY))
+        frosted = Image.alpha_composite(panel_area, overlay)
+        mask = Image.new("L", (PANEL_W, PANEL_H), 0)
+        ImageDraw.Draw(mask).rounded_rectangle((0, 0, PANEL_W, PANEL_H), 50, fill=255)
+        bg.paste(frosted, (PANEL_X, PANEL_Y), mask)
 
-    draw.text((TITLE_X, TITLE_Y), trim_to_width(title, title_font, MAX_TITLE_WIDTH), fill="black", font=title_font)
-    draw.text((META_X, META_Y), f"YouTube | {views}", fill="black", font=regular_font)
+        draw = ImageDraw.Draw(bg)
+        try:
+            title_font = ImageFont.truetype("MADARAMUSIC/assets/assets/font2.ttf", 32)
+            regular_font = ImageFont.truetype("MADARAMUSIC/assets/assets/font.ttf", 18)
+        except Exception:
+            title_font = regular_font = ImageFont.load_default()
 
-    # Progress bar
-    draw.line([(BAR_X, BAR_Y), (BAR_X + BAR_RED_LEN, BAR_Y)], fill="red", width=6)
-    draw.line([(BAR_X + BAR_RED_LEN, BAR_Y), (BAR_X + BAR_TOTAL_LEN, BAR_Y)], fill="gray", width=5)
-    draw.ellipse([(BAR_X + BAR_RED_LEN - 7, BAR_Y - 7), (BAR_X + BAR_RED_LEN + 7, BAR_Y + 7)], fill="red")
+        thumb = base.resize((THUMB_W, THUMB_H))
+        tmask = Image.new("L", thumb.size, 0)
+        ImageDraw.Draw(tmask).rounded_rectangle((0, 0, THUMB_W, THUMB_H), 20, fill=255)
+        bg.paste(thumb, (THUMB_X, THUMB_Y), tmask)
 
-    draw.text((BAR_X, BAR_Y + 15), "00:00", fill="black", font=regular_font)
-    end_text = "Live" if is_live else duration_text
-    draw.text((BAR_X + BAR_TOTAL_LEN - (90 if is_live else 60), BAR_Y + 15), end_text, fill="red" if is_live else "black", font=regular_font)
+        draw.text((TITLE_X, TITLE_Y), trim_to_width(title, title_font, MAX_TITLE_WIDTH), fill="black", font=title_font)
+        draw.text((META_X, META_Y), f"YouTube | {views}", fill="black", font=regular_font)
 
-    # Icons
-    icons_path = "MADARAMUSIC/assets/assets/play_icons.png"
-    if os.path.isfile(icons_path):
-        ic = Image.open(icons_path).resize((ICONS_W, ICONS_H)).convert("RGBA")
-        r, g, b, a = ic.split()
-        black_ic = Image.merge("RGBA", (r.point(lambda *_: 0), g.point(lambda *_: 0), b.point(lambda *_: 0), a))
-        bg.paste(black_ic, (ICONS_X, ICONS_Y), black_ic)
+        draw.line([(BAR_X, BAR_Y), (BAR_X + BAR_RED_LEN, BAR_Y)], fill="red", width=6)
+        draw.line([(BAR_X + BAR_RED_LEN, BAR_Y), (BAR_X + BAR_TOTAL_LEN, BAR_Y)], fill="gray", width=5)
+        draw.ellipse([(BAR_X + BAR_RED_LEN - 7, BAR_Y - 7), (BAR_X + BAR_RED_LEN + 7, BAR_Y + 7)], fill="red")
 
-    # Cleanup and save
-    try:
-        os.remove(thumb_path)
-    except OSError:
-        pass
+        draw.text((BAR_X, BAR_Y + 15), "00:00", fill="black", font=regular_font)
+        end_text = "Live" if is_live else duration_text
+        draw.text((BAR_X + BAR_TOTAL_LEN - (90 if is_live else 60), BAR_Y + 15), end_text, fill="red" if is_live else "black", font=regular_font)
 
-    bg.save(cache_path)
+        icons_path = "MADARAMUSIC/assets/assets/play_icons.png"
+        if os.path.isfile(icons_path):
+            ic = Image.open(icons_path).resize((ICONS_W, ICONS_H)).convert("RGBA")
+            r, g, b, a = ic.split()
+            black_ic = Image.merge("RGBA", (r.point(lambda *_: 0), g.point(lambda *_: 0), b.point(lambda *_: 0), a))
+            bg.paste(black_ic, (ICONS_X, ICONS_Y), black_ic)
+
+        bg.save(cache_path)
+    except Exception:
+        return YOUTUBE_IMG_URL
+    finally:
+        if os.path.exists(thumb_path):
+            try:
+                os.remove(thumb_path)
+            except OSError:
+                pass
+
     return cache_path
+                       
