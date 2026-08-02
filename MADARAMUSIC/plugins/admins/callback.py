@@ -120,7 +120,6 @@ async def del_back_playlist(client, CallbackQuery, _):
                     if CallbackQuery.from_user.id not in admins:
                         return await CallbackQuery.answer(_["admin_14"], show_alert=True)
 
-    # ── AUTOPLAY BUTTON LOGIC ADDED HERE ──
     if command == "Autoplay":
         state = await get_autoplay(chat_id)
         if state:
@@ -142,7 +141,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             return await CallbackQuery.answer(_["admin_1"], show_alert=True)
         await CallbackQuery.answer()
         await music_off(chat_id)
-        await SHUKLA.pause_stream(chat_id)
+        await MADARA.pause_stream(chat_id)
         await CallbackQuery.message.reply_text(_["admin_2"].format(mention), reply_markup=close_markup(_))
 
     elif command == "Resume":
@@ -150,12 +149,12 @@ async def del_back_playlist(client, CallbackQuery, _):
             return await CallbackQuery.answer(_["admin_3"], show_alert=True)
         await CallbackQuery.answer()
         await music_on(chat_id)
-        await SHUKLA.resume_stream(chat_id)
+        await MADARA.resume_stream(chat_id)
         await CallbackQuery.message.reply_text(_["admin_4"].format(mention), reply_markup=close_markup(_))
 
     elif command == "Stop" or command == "End":
         await CallbackQuery.answer()
-        await SHUKLA.stop_stream(chat_id)
+        await MADARA.stop_stream(chat_id)
         await set_loop(chat_id, 0)
         await CallbackQuery.message.reply_text(_["admin_5"].format(mention), reply_markup=close_markup(_))
         await CallbackQuery.message.delete()
@@ -170,7 +169,6 @@ async def del_back_playlist(client, CallbackQuery, _):
                 if popped:
                     await auto_clean(popped)
 
-                # --- 🚀 ALONE-X SMART AUTOPLAY SKIP LOGIC ---
                 if not check:
                     try:
                         is_autoplay = await get_autoplay(chat_id)
@@ -207,7 +205,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                                 pass
 
                             if not related:
-                                history = SHUKLA.history.get(chat_id, []) if hasattr(SHUKLA, 'history') else []
+                                history = MADARA.history.get(chat_id, []) if hasattr(MADARA, 'history') else []
                                 related = await YouTube.get_related(vidid, history)
 
                             if related:
@@ -215,7 +213,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                                     "vidid": related["vidid"],
                                     "file": f"vid_{related['vidid']}",
                                     "title": related["title"],
-                                    "by": "Aᴜᴛᴏᴘʟᴀʏ", # ✅ NEW FONT APPLIED HERE
+                                    "by": "Aᴜᴛᴏᴘʟᴀʏ",
                                     "chat_id": chat_id,
                                     "streamtype": "audio",
                                     "dur": related.get("duration", "Unknown"),
@@ -232,25 +230,23 @@ async def del_back_playlist(client, CallbackQuery, _):
                             pass
 
                 check = db.get(chat_id)
-                # ----------------------------------------
 
                 if not check:
                     await CallbackQuery.edit_message_text(f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀")
                     await CallbackQuery.message.reply_text(text=_["admin_6"].format(mention, CallbackQuery.message.chat.title), reply_markup=close_markup(_))
                     try:
-                        return await SHUKLA.stop_stream(chat_id)
+                        return await MADARA.stop_stream(chat_id)
                     except:
                         return
             except:
                 try:
                     await CallbackQuery.edit_message_text(f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀")
                     await CallbackQuery.message.reply_text(text=_["admin_6"].format(mention, CallbackQuery.message.chat.title), reply_markup=close_markup(_))
-                    return await SHUKLA.stop_stream(chat_id)
+                    return await MADARA.stop_stream(chat_id)
                 except:
                     return
         else:
             txt = f"➻ sᴛʀᴇᴀᴍ ʀᴇ-ᴘʟᴀʏᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
-
         await CallbackQuery.answer()
         queued = check[0]["file"]
         title = (check[0]["title"]).title()
@@ -276,6 +272,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 dynamic_button = stream_markup_timer(_, chat_id, "00:00", dur)
         else:
             dynamic_button = stream_markup_timer(_, chat_id, "00:00", dur)
+            
         if "live_" in queued:
             n, link = await YouTube.video(videoid, True)
             if n == 0:
@@ -285,7 +282,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             except:
                 image = None
             try:
-                await SHUKLA.skip_stream(chat_id, link, video=status, image=image)
+                await MADARA.skip_stream(chat_id, link, video=status, image=image)
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
 
@@ -298,7 +295,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
-                        await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
+            await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
 
         elif "vid_" in queued:
             mystic = await CallbackQuery.message.reply_text(_["call_7"], disable_web_page_preview=True)
@@ -311,7 +308,7 @@ async def del_back_playlist(client, CallbackQuery, _):
             except:
                 image = None
             try:
-                await SHUKLA.skip_stream(chat_id, file_path, video=status, image=image)
+                await MADARA.skip_stream(chat_id, file_path, video=status, image=image)
             except:
                 return await mystic.edit_text(_["call_6"])
 
@@ -328,7 +325,7 @@ async def del_back_playlist(client, CallbackQuery, _):
 
         elif "index_" in queued:
             try:
-                await SHUKLA.skip_stream(chat_id, videoid, video=status)
+                await MADARA.skip_stream(chat_id, videoid, video=status)
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
 
@@ -348,7 +345,7 @@ async def del_back_playlist(client, CallbackQuery, _):
                 try: image = await YouTube.thumbnail(videoid, True)
                 except: image = None
             try:
-                await SHUKLA.skip_stream(chat_id, queued, video=status, image=image)
+                await MADARA.skip_stream(chat_id, queued, video=status, image=image)
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
 
