@@ -37,7 +37,7 @@ FALLBACK_API_URL = "https://shrutibots.site"
 
 # --- DATABASE CONNECTION ---
 _mongo_async_ = AsyncIOMotorClient(MONGO_DB_URI)
-mongodb = _mongo_async_.L2RMUSIC
+mongodb = _mongo_async_.Anon
 trackdb = mongodb.track_cache
 
 # --- HELPER FUNCTIONS ---
