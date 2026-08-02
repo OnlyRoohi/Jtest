@@ -252,7 +252,6 @@ class Call(PyTgCalls):
             ffmpeg=ffmpeg,
         )
         await self._play_on_assistant(assistant, chat_id, stream)
-
     async def autoplay_start(
         self,
         chat_id: int,
@@ -406,7 +405,6 @@ class Call(PyTgCalls):
             users = len(await assistant.get_participants(chat_id))
             if users == 1:
                 autoend[chat_id] = datetime.now() + timedelta(minutes=1)
-
     async def change_stream(self, client: PyTgCalls, chat_id: int):
         check = db.get(chat_id)
         popped = None
@@ -566,7 +564,20 @@ class Call(PyTgCalls):
                     reply_markup=InlineKeyboardMarkup(button),
                 )
                 db[chat_id][0]["mystic"] = run
-                            else:
+                db[chat_id][0]["markup"] = "tg"
+            elif videoid == "soundcloud":
+                button = stream_markup(_, chat_id)
+                run = await app.send_photo(
+                    chat_id=original_chat_id,
+                    photo=config.SOUNCLOUD_IMG_URL,
+                    caption=_["stream_1"].format(
+                        config.SUPPORT_GROUP, title[:23], check[0]["dur"], user
+                    ),
+                    reply_markup=InlineKeyboardMarkup(button),
+                )
+                db[chat_id][0]["mystic"] = run
+                db[chat_id][0]["markup"] = "tg"
+            else:
                 img = await gen_thumb(videoid)
                 button = stream_markup(_, chat_id)
                 run = await app.send_photo(
@@ -634,4 +645,3 @@ class Call(PyTgCalls):
                         await self.stop_stream(update.chat_id)
 
 MADARA = Call()
-    
