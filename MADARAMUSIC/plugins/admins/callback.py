@@ -1,8 +1,3 @@
-# -----------------------------------------------
-# 🔸 RAJSHREE MUSIC BOT
-# 🔹 Developed & Owned by: MADARA
-# 📅 Copyright © 2025 – All Rights Reserved
-# -----------------------------------------------
 import asyncio
 from pyrogram import filters
 from pyrogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
@@ -10,52 +5,35 @@ from MADARAMUSIC import YouTube, app
 from MADARAMUSIC.core.call import MADARA
 from MADARAMUSIC.misc import SUDOERS, db
 from MADARAMUSIC.utils.database import (
-    get_active_chats,
-    get_autoplay,
-    get_lang,
-    get_upvote_count,
-    is_active_chat,
-    is_music_playing,
-    is_nonadmin_chat,
-    music_off,
-    music_on,
-    set_autoplay,
-    set_loop,
+    get_active_chats, get_autoplay, get_lang, get_upvote_count,
+    is_active_chat, is_music_playing, is_nonadmin_chat,
+    music_off, music_on, set_autoplay, set_loop,
 )
-from pyrogram.errors import (
-    ChatAdminRequired,
-    InviteRequestSent,
-    UserAlreadyParticipant,
-    UserNotParticipant,
-)
+from pyrogram.errors import ChatAdminRequired, InviteRequestSent, UserAlreadyParticipant, UserNotParticipant
 from MADARAMUSIC.utils.database import get_assistant
 from MADARAMUSIC.utils.decorators.language import languageCB
 from MADARAMUSIC.utils.formatters import seconds_to_min
 from MADARAMUSIC.utils.inline import close_markup, stream_markup, stream_markup_timer
 from MADARAMUSIC.utils.stream.autoclear import auto_clean
 from MADARAMUSIC.utils.thumbnails import get_thumb
-from config import (
-    BANNED_USERS,
-    SOUNCLOUD_IMG_URL,
-    STREAM_IMG_URL,
-    TELEGRAM_AUDIO_URL,
-    TELEGRAM_VIDEO_URL,
-    adminlist,
-    confirmer,
-    votemode,
-)
+from config import BANNED_USERS, SOUNCLOUD_IMG_URL, STREAM_IMG_URL, TELEGRAM_AUDIO_URL, TELEGRAM_VIDEO_URL, adminlist, confirmer, votemode
 from strings import get_string
 
 checker = {}
 upvoters = {}
 
+async def _delete_msg(message, delay: int = 6):
+    try:
+        await asyncio.sleep(delay)
+        await message.delete()
+    except Exception:
+        pass
 
 
 @app.on_callback_query(filters.regex("unban_assistant"))
 async def unban_assistant(_, callback: CallbackQuery):
     chat_id = callback.message.chat.id
     userbot = await get_assistant(chat_id)
-    
     try:
         await app.unban_chat_member(chat_id, userbot.id)
         await callback.answer("𝗠𝘆 𝗔𝘀𝘀𝗶𝘀𝘁𝗮𝗻𝘁 𝗜𝗱 𝗨𝗻𝗯𝗮𝗻𝗻𝗲𝗱 𝗦𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆🥳\n\n➻ 𝗡𝗼𝘄 𝗬𝗼𝘂 𝗖𝗮𝗻 𝗣𝗹𝗮𝘆 𝗦𝗼𝗻𝗴𝘀🔉\n\n𝗧𝗵𝗮𝗻𝗸 𝗬𝗼𝘂💝", show_alert=True)
@@ -74,9 +52,12 @@ async def del_back_playlist(client, CallbackQuery, _):
         chat = bet[0]
         counter = bet[1]
     chat_id = int(chat)
+
     if not await is_active_chat(chat_id):
         return await CallbackQuery.answer(_["general_5"], show_alert=True)
+
     mention = CallbackQuery.from_user.mention
+
     if command == "UpVote":
         if chat_id not in votemode:
             votemode[chat_id] = {}
@@ -92,17 +73,14 @@ async def del_back_playlist(client, CallbackQuery, _):
             votemode[chat_id][CallbackQuery.message.id] = 0
 
         if CallbackQuery.from_user.id in upvoters[chat_id][CallbackQuery.message.id]:
-            (upvoters[chat_id][CallbackQuery.message.id]).remove(
-                CallbackQuery.from_user.id
-            )
+            (upvoters[chat_id][CallbackQuery.message.id]).remove(CallbackQuery.from_user.id)
             votemode[chat_id][CallbackQuery.message.id] -= 1
         else:
-            (upvoters[chat_id][CallbackQuery.message.id]).append(
-                CallbackQuery.from_user.id
-            )
+            (upvoters[chat_id][CallbackQuery.message.id]).append(CallbackQuery.from_user.id)
             votemode[chat_id][CallbackQuery.message.id] += 1
         upvote = await get_upvote_count(chat_id)
         get_upvotes = int(votemode[chat_id][CallbackQuery.message.id])
+
         if get_upvotes >= upvote:
             votemode[chat_id][CallbackQuery.message.id] = upvote
             try:
@@ -124,23 +102,11 @@ async def del_back_playlist(client, CallbackQuery, _):
             command = counter
             mention = "ᴜᴘᴠᴏᴛᴇs"
         else:
-            if (
-                CallbackQuery.from_user.id
-                in upvoters[chat_id][CallbackQuery.message.id]
-            ):
+            if CallbackQuery.from_user.id in upvoters[chat_id][CallbackQuery.message.id]:
                 await CallbackQuery.answer(_["admin_38"], show_alert=True)
             else:
                 await CallbackQuery.answer(_["admin_39"], show_alert=True)
-            upl = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            text=f"👍 {get_upvotes}",
-                            callback_data=f"ADMIN  UpVote|{chat_id}_{counter}",
-                        )
-                    ]
-                ]
-            )
+            upl = InlineKeyboardMarkup([[InlineKeyboardButton(text=f"👍 {get_upvotes}", callback_data=f"ADMIN  UpVote|{chat_id}_{counter}")]])
             await CallbackQuery.answer(_["admin_40"], show_alert=True)
             return await CallbackQuery.edit_message_reply_markup(reply_markup=upl)
     else:
@@ -152,48 +118,48 @@ async def del_back_playlist(client, CallbackQuery, _):
                     return await CallbackQuery.answer(_["admin_13"], show_alert=True)
                 else:
                     if CallbackQuery.from_user.id not in admins:
-                        return await CallbackQuery.answer(
-                            _["admin_14"], show_alert=True
-                        )
+                        return await CallbackQuery.answer(_["admin_14"], show_alert=True)
+
+    # ── AUTOPLAY BUTTON LOGIC ADDED HERE ──
     if command == "Autoplay":
-        from MADARAMUSIC.utils.database import get_autoplay_owner, set_autoplay_owner
         state = await get_autoplay(chat_id)
-        new_state = not state
-        await set_autoplay(chat_id, new_state)
-        if new_state:
-            await set_autoplay_owner(chat_id, CallbackQuery.from_user.id)
-            await CallbackQuery.answer(
-                "🌟 Autoplay ON — I'll keep playing related songs automatically!",
-                show_alert=True,
+        if state:
+            await set_autoplay(chat_id, False)
+            await CallbackQuery.answer("🔴 ᴧυᴛσᴘʟᴧʏ ᴅɪsᴧʙʟєᴅ!", show_alert=True)
+            await CallbackQuery.message.reply_text(
+                f"<blockquote><b>🔴 🎧 ᴧυᴛσᴘʟᴧʏ sʏsᴛєϻ</b>\n\n<b>ᴧυᴛσᴘʟᴧʏ ғσʀ ᴛʜɪs ɢʀσυᴘ ɪs ησᴡ ᴅɪsᴧʙʟєᴅ 🔴.</b>\n└ <b>ʙʏ :</b> {mention}</blockquote>",
+                 reply_markup=close_markup(_)
             )
         else:
-            await CallbackQuery.answer("⏹ Autoplay OFF for this chat.", show_alert=True)
+            await set_autoplay(chat_id, True)
+            await CallbackQuery.answer("🟢 ᴧυᴛσᴘʟᴧʏ єηᴧʙʟєᴅ!", show_alert=True)
+            await CallbackQuery.message.reply_text(
+                f"<blockquote><b>🟢 🎧 ᴧυᴛσᴘʟᴧʏ sʏsᴛєϻ</b>\n\n<b>ᴧυᴛσᴘʟᴧʏ ғσʀ ᴛʜɪs ɢʀσυᴘ ɪs ησᴡ єηᴧʙʟєᴅ 🟢.</b>\n└ <b>ʙʏ :</b> {mention}</blockquote>",
+                  reply_markup=close_markup(_)
+            )
     elif command == "Pause":
         if not await is_music_playing(chat_id):
             return await CallbackQuery.answer(_["admin_1"], show_alert=True)
         await CallbackQuery.answer()
         await music_off(chat_id)
-        await MADARA.pause_stream(chat_id)
-        await CallbackQuery.message.reply_text(
-            _["admin_2"].format(mention), reply_markup=close_markup(_)
-        )
+        await SHUKLA.pause_stream(chat_id)
+        await CallbackQuery.message.reply_text(_["admin_2"].format(mention), reply_markup=close_markup(_))
+
     elif command == "Resume":
         if await is_music_playing(chat_id):
             return await CallbackQuery.answer(_["admin_3"], show_alert=True)
         await CallbackQuery.answer()
         await music_on(chat_id)
-        await MADARA.resume_stream(chat_id)
-        await CallbackQuery.message.reply_text(
-            _["admin_4"].format(mention), reply_markup=close_markup(_)
-        )
+        await SHUKLA.resume_stream(chat_id)
+        await CallbackQuery.message.reply_text(_["admin_4"].format(mention), reply_markup=close_markup(_))
+
     elif command == "Stop" or command == "End":
         await CallbackQuery.answer()
-        await MADARA.stop_stream(chat_id)
+        await SHUKLA.stop_stream(chat_id)
         await set_loop(chat_id, 0)
-        await CallbackQuery.message.reply_text(
-            _["admin_5"].format(mention), reply_markup=close_markup(_)
-        )
+        await CallbackQuery.message.reply_text(_["admin_5"].format(mention), reply_markup=close_markup(_))
         await CallbackQuery.message.delete()
+
     elif command == "Skip" or command == "Replay":
         check = db.get(chat_id)
         if command == "Skip":
@@ -203,36 +169,88 @@ async def del_back_playlist(client, CallbackQuery, _):
                 popped = check.pop(0)
                 if popped:
                     await auto_clean(popped)
+
+                # --- 🚀 ALONE-X SMART AUTOPLAY SKIP LOGIC ---
                 if not check:
-                    await CallbackQuery.edit_message_text(
-                        f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
-                    )
-                    await CallbackQuery.message.reply_text(
-                        text=_["admin_6"].format(
-                            mention, CallbackQuery.message.chat.title
-                        ),
-                        reply_markup=close_markup(_),
-                    )
                     try:
-                        return await MADARA.stop_stream(chat_id)
+                        is_autoplay = await get_autoplay(chat_id)
+                    except:
+                        is_autoplay = False
+
+                    if is_autoplay and popped and popped.get("vidid") not in ["telegram", "soundcloud", None]:
+                        try:
+                            vidid = popped["vidid"]
+                            related = None
+
+                            from youtubesearchpython.__future__ import Video, VideosSearch
+                            try:
+                                video_info = await Video.get(vidid)
+                                if video_info and "channel" in video_info:
+                                    channel_name = video_info["channel"].get("name", "")
+                                    search_query = f"{channel_name} songs"
+                                    results = VideosSearch(search_query, limit=7)
+                                    res = await results.next()
+                                    if res and res.get("result"):
+                                        for track in res["result"]:
+                                            if track.get("id") != vidid and track.get("duration"):
+                                                dur = track.get("duration", "0:00")
+                                                parts = dur.split(":")
+                                                duration_sec = sum(int(x) * 60 ** i for i, x in enumerate(reversed(parts)))
+                                                related = {
+                                                    "vidid": track.get("id"),
+                                                    "title": track.get("title", "Unknown Title"),
+                                                    "duration": dur,
+                                                    "duration_sec": duration_sec
+                                                }
+                                                break
+                            except Exception:
+                                pass
+
+                            if not related:
+                                history = SHUKLA.history.get(chat_id, []) if hasattr(SHUKLA, 'history') else []
+                                related = await YouTube.get_related(vidid, history)
+
+                            if related:
+                                db[chat_id].append({
+                                    "vidid": related["vidid"],
+                                    "file": f"vid_{related['vidid']}",
+                                    "title": related["title"],
+                                    "by": "Aᴜᴛᴏᴘʟᴀʏ", # ✅ NEW FONT APPLIED HERE
+                                    "chat_id": chat_id,
+                                    "streamtype": "audio",
+                                    "dur": related.get("duration", "Unknown"),
+                                    "seconds": related.get("duration_sec", 0),
+                                })
+                                short_title = related["title"][:45] + "..." if len(related["title"]) > 45 else related["title"]
+                                notice = await app.send_message(
+                                    chat_id, 
+                                    f"<blockquote>▶️ <b>Aᴜᴛᴏᴘʟᴀʏ Sᴋɪᴘ :</b>\n🎧 <a href='https://youtube.com/watch?v={related['vidid']}'><i>{short_title}</i></a></blockquote>", 
+                                    disable_web_page_preview=True
+                                )
+                                asyncio.create_task(_delete_msg(notice, 6))
+                        except Exception:
+                            pass
+
+                check = db.get(chat_id)
+                # ----------------------------------------
+
+                if not check:
+                    await CallbackQuery.edit_message_text(f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀")
+                    await CallbackQuery.message.reply_text(text=_["admin_6"].format(mention, CallbackQuery.message.chat.title), reply_markup=close_markup(_))
+                    try:
+                        return await SHUKLA.stop_stream(chat_id)
                     except:
                         return
             except:
                 try:
-                    await CallbackQuery.edit_message_text(
-                        f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
-                    )
-                    await CallbackQuery.message.reply_text(
-                        text=_["admin_6"].format(
-                            mention, CallbackQuery.message.chat.title
-                        ),
-                        reply_markup=close_markup(_),
-                    )
-                    return await MADARA.stop_stream(chat_id)
+                    await CallbackQuery.edit_message_text(f"➻ sᴛʀᴇᴀᴍ sᴋɪᴩᴩᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀")
+                    await CallbackQuery.message.reply_text(text=_["admin_6"].format(mention, CallbackQuery.message.chat.title), reply_markup=close_markup(_))
+                    return await SHUKLA.stop_stream(chat_id)
                 except:
                     return
         else:
             txt = f"➻ sᴛʀᴇᴀᴍ ʀᴇ-ᴘʟᴀʏᴇᴅ 🎄\n│ \n└ʙʏ : {mention} 🥀"
+
         await CallbackQuery.answer()
         queued = check[0]["file"]
         title = (check[0]["title"]).title()
@@ -243,52 +261,49 @@ async def del_back_playlist(client, CallbackQuery, _):
         status = True if str(streamtype) == "video" else None
         db[chat_id][0]["played"] = 0
         exis = (check[0]).get("old_dur")
+
         if exis:
             db[chat_id][0]["dur"] = exis
             db[chat_id][0]["seconds"] = check[0]["old_second"]
             db[chat_id][0]["speed_path"] = None
             db[chat_id][0]["speed"] = 1.0
+
+        dur = check[0].get("dur", "0:00")
+        if dur == "Unknown" or dur == "0:00":
+            try:
+                dynamic_button = stream_markup(_, chat_id)
+            except:
+                dynamic_button = stream_markup_timer(_, chat_id, "00:00", dur)
+        else:
+            dynamic_button = stream_markup_timer(_, chat_id, "00:00", dur)
         if "live_" in queued:
             n, link = await YouTube.video(videoid, True)
             if n == 0:
-                return await CallbackQuery.message.reply_text(
-                    text=_["admin_7"].format(title),
-                    reply_markup=close_markup(_),
-                )
+                return await CallbackQuery.message.reply_text(text=_["admin_7"].format(title), reply_markup=close_markup(_))
             try:
                 image = await YouTube.thumbnail(videoid, True)
             except:
                 image = None
             try:
-                await MADARA.skip_stream(chat_id, link, video=status, image=image)
+                await SHUKLA.skip_stream(chat_id, link, video=status, image=image)
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
+
             button = stream_markup(_, chat_id)
             img = await get_thumb(videoid)
             run = await CallbackQuery.message.reply_photo(
                 photo=img,
-                caption=_["stream_1"].format(
-                    f"https://t.me/{app.username}?start=info_{videoid}",
-                    title[:23],
-                    duration,
-                    user,
-                ),
+                caption=_["stream_1"].format(f"https://t.me/{app.username}?start=info_{videoid}", title[:23], duration, user),
                 reply_markup=InlineKeyboardMarkup(button),
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
-            await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
+                        await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
+
         elif "vid_" in queued:
-            mystic = await CallbackQuery.message.reply_text(
-                _["call_7"], disable_web_page_preview=True
-            )
+            mystic = await CallbackQuery.message.reply_text(_["call_7"], disable_web_page_preview=True)
             try:
-                file_path, direct = await YouTube.download(
-                    videoid,
-                    mystic,
-                    videoid=True,
-                    video=status,
-                )
+                file_path, direct = await YouTube.download(videoid, mystic, videoid=True, video=status)
             except:
                 return await mystic.edit_text(_["call_6"])
             try:
@@ -296,97 +311,76 @@ async def del_back_playlist(client, CallbackQuery, _):
             except:
                 image = None
             try:
-                await MADARA.skip_stream(chat_id, file_path, video=status, image=image)
+                await SHUKLA.skip_stream(chat_id, file_path, video=status, image=image)
             except:
                 return await mystic.edit_text(_["call_6"])
-            button = stream_markup(_, chat_id)
+
             img = await get_thumb(videoid)
             run = await CallbackQuery.message.reply_photo(
                 photo=img,
-                caption=_["stream_1"].format(
-                    f"https://t.me/{app.username}?start=info_{videoid}",
-                    title[:23],
-                    duration,
-                    user,
-                ),
-                reply_markup=InlineKeyboardMarkup(button),
+                caption=_["stream_1"].format(f"https://t.me/{app.username}?start=info_{videoid}", title[:23], duration, user),
+                reply_markup=InlineKeyboardMarkup(dynamic_button),
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "stream"
             await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
             await mystic.delete()
+
         elif "index_" in queued:
             try:
-                await MADARA.skip_stream(chat_id, videoid, video=status)
+                await SHUKLA.skip_stream(chat_id, videoid, video=status)
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
-            button = stream_markup(_, chat_id)
+
             run = await CallbackQuery.message.reply_photo(
                 photo=STREAM_IMG_URL,
                 caption=_["stream_2"].format(user),
-                reply_markup=InlineKeyboardMarkup(button),
+                reply_markup=InlineKeyboardMarkup(dynamic_button),
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
             await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
+
         else:
-            if videoid == "telegram":
-                image = None
-            elif videoid == "soundcloud":
-                image = None
+            if videoid == "telegram": image = None
+            elif videoid == "soundcloud": image = None
             else:
-                try:
-                    image = await YouTube.thumbnail(videoid, True)
-                except:
-                    image = None
+                try: image = await YouTube.thumbnail(videoid, True)
+                except: image = None
             try:
-                await MADARA.skip_stream(chat_id, queued, video=status, image=image)
+                await SHUKLA.skip_stream(chat_id, queued, video=status, image=image)
             except:
                 return await CallbackQuery.message.reply_text(_["call_6"])
+
             if videoid == "telegram":
-                button = stream_markup(_, chat_id)
                 run = await CallbackQuery.message.reply_photo(
-                    photo=TELEGRAM_AUDIO_URL
-                    if str(streamtype) == "audio"
-                    else TELEGRAM_VIDEO_URL,
-                    caption=_["stream_1"].format(
-                        config.SUPPORT_CHAT, title[:23], duration, user
-                    ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    photo=TELEGRAM_AUDIO_URL if str(streamtype) == "audio" else TELEGRAM_VIDEO_URL,
+                    caption=_["stream_1"].format(config.SUPPORT_CHAT, title[:23], duration, user),
+                    reply_markup=InlineKeyboardMarkup(dynamic_button),
                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "tg"
             elif videoid == "soundcloud":
-                button = stream_markup(_, chat_id)
                 run = await CallbackQuery.message.reply_photo(
-                    photo=SOUNCLOUD_IMG_URL
-                    if str(streamtype) == "audio"
-                    else TELEGRAM_VIDEO_URL,
-                    caption=_["stream_1"].format(
-                        config.SUPPORT_CHAT, title[:23], duration, user
-                    ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    photo=SOUNCLOUD_IMG_URL if str(streamtype) == "audio" else TELEGRAM_VIDEO_URL,
+                    caption=_["stream_1"].format(config.SUPPORT_CHAT, title[:23], duration, user),
+                    reply_markup=InlineKeyboardMarkup(dynamic_button),
                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "tg"
             else:
-                button = stream_markup(_, chat_id)
                 img = await get_thumb(videoid)
                 run = await CallbackQuery.message.reply_photo(
                     photo=img,
-                    caption=_["stream_1"].format(
-                        f"https://t.me/{app.username}?start=info_{videoid}",
-                        title[:23],
-                        duration,
-                        user,
-                    ),
-                    reply_markup=InlineKeyboardMarkup(button),
+                    caption=_["stream_1"].format(f"https://t.me/{app.username}?start=info_{videoid}", title[:23], duration, user),
+                    reply_markup=InlineKeyboardMarkup(dynamic_button),
                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "stream"
             await CallbackQuery.edit_message_text(txt, reply_markup=close_markup(_))
 
 
+# ── TIMER FIX ──
 async def markup_timer():
     while not await asyncio.sleep(7):
         active_chats = await get_active_chats()
@@ -397,38 +391,32 @@ async def markup_timer():
                 playing = db.get(chat_id)
                 if not playing:
                     continue
-                duration_seconds = int(playing[0]["seconds"])
-                if duration_seconds == 0:
-                    continue
+
                 try:
-                    mystic = playing[0]["mystic"]
-                except:
-                    continue
-                try:
-                    check = checker[chat_id][mystic.id]
-                    if check is False:
+                    played_sec = playing[0].get("played", 0)
+                    duration_sec = playing[0].get("seconds", 1)
+
+                    if played_sec == 0 and duration_sec == 0:
+                        continue
+
+                    mystic = playing[0].get("mystic")
+                    if not mystic:
                         continue
                 except:
-                    pass
+                    continue
+
                 try:
-                    language = await get_lang(chat_id)
-                    _ = get_string(language)
+                    lang = await get_lang(chat_id)
+                    _ = get_string(lang)
                 except:
                     _ = get_string("en")
-                try:
-                    buttons = stream_markup_timer(
-                        _,
-                        chat_id,
-                        seconds_to_min(playing[0]["played"]),
-                        playing[0]["dur"],
-                    )
-                    await mystic.edit_reply_markup(
-                        reply_markup=InlineKeyboardMarkup(buttons)
-                    )
-                except:
-                    continue
-            except:
-                continue
 
+                buttons = stream_markup_timer(
+                    _, chat_id, seconds_to_min(played_sec), playing[0]["dur"]
+                )
+
+                await mystic.edit_reply_markup(reply_markup=InlineKeyboardMarkup(buttons))
+            except Exception:
+                continue
 
 asyncio.create_task(markup_timer())
