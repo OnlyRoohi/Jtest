@@ -1,8 +1,3 @@
-# -----------------------------------------------
-# 🔸 RAJSHREE MUSIC BOT
-# 🔹 Developed & Owned by: MADARA
-# 📅 Copyright © 2025 – All Rights Reserved
-# -----------------------------------------------
 import asyncio
 import os
 from datetime import datetime, timedelta
@@ -22,15 +17,18 @@ from MADARAMUSIC.utils.database import (
     get_loop,
     group_assistant,
     is_autoend,
+    is_autoplay_on,
     music_on,
     remove_active_chat,
     remove_active_video_chat,
     set_loop,
 )
+from MADARAMUSIC.utils.autoplay import fetch_autoplay_track, remember_played
 from MADARAMUSIC.utils.exceptions import AssistantErr
 from MADARAMUSIC.utils.formatters import check_duration, seconds_to_min, speed_converter
 from MADARAMUSIC.utils.inline.play import stream_markup
 from MADARAMUSIC.utils.stream.autoclear import auto_clean
+from MADARAMUSIC.utils.stream.queue import put_queue
 from MADARAMUSIC.utils.thumbnails import get_thumb as gen_thumb
 from strings import get_string
 
@@ -47,7 +45,7 @@ class Call(PyTgCalls):
         PyTgCallsSession.notice_displayed = True
 
         self.userbot1 = Client(
-            name="SHUKLAAss1",
+            name="ShiviAss1",
             api_id=config.API_ID,
             api_hash=config.API_HASH,
             session_string=str(config.STRING1),
@@ -55,7 +53,7 @@ class Call(PyTgCalls):
         self.one = PyTgCalls(self.userbot1, cache_duration=100)
 
         self.userbot2 = Client(
-            name="SHUKLAAss2",
+            name="ShiviAss2",
             api_id=config.API_ID,
             api_hash=config.API_HASH,
             session_string=str(config.STRING2),
@@ -63,7 +61,7 @@ class Call(PyTgCalls):
         self.two = PyTgCalls(self.userbot2, cache_duration=100)
 
         self.userbot3 = Client(
-            name="SHUKLAAss3",
+            name="ShiviAss3",
             api_id=config.API_ID,
             api_hash=config.API_HASH,
             session_string=str(config.STRING3),
@@ -71,7 +69,7 @@ class Call(PyTgCalls):
         self.three = PyTgCalls(self.userbot3, cache_duration=100)
 
         self.userbot4 = Client(
-            name="SHUKLAAss4",
+            name="ShiviAss4",
             api_id=config.API_ID,
             api_hash=config.API_HASH,
             session_string=str(config.STRING4),
@@ -79,7 +77,7 @@ class Call(PyTgCalls):
         self.four = PyTgCalls(self.userbot4, cache_duration=100)
 
         self.userbot5 = Client(
-            name="SHUKLAAss5",
+            name="ShiviAss5",
             api_id=config.API_ID,
             api_hash=config.API_HASH,
             session_string=str(config.STRING5),
@@ -92,13 +90,9 @@ class Call(PyTgCalls):
         video: bool,
         ffmpeg: str | None = None,
     ) -> types.MediaStream:
-        # Always pass -threads 0 so ffmpeg uses all available cores for
-        # decode/encode — reduces CPU bottleneck and streaming stutter.
-        base_flags = "-threads 0"
-        combined = f"{base_flags} {ffmpeg}" if ffmpeg else base_flags
         return types.MediaStream(
             media_path=source,
-            audio_parameters=types.AudioQuality.MEDIUM,
+            audio_parameters=types.AudioQuality.HIGH,
             video_parameters=types.VideoQuality.HD_720p,
             audio_flags=types.MediaStream.Flags.REQUIRED,
             video_flags=(
@@ -106,7 +100,7 @@ class Call(PyTgCalls):
                 if video
                 else types.MediaStream.Flags.IGNORE
             ),
-            ffmpeg_parameters=combined,
+            ffmpeg_parameters=ffmpeg,
         )
 
     async def _play_on_assistant(
@@ -236,7 +230,6 @@ class Call(PyTgCalls):
             await assistant.leave_call(chat_id, close=False)
         except Exception:
             pass
-
     async def skip_stream(
         self,
         chat_id: int,
@@ -258,6 +251,117 @@ class Call(PyTgCalls):
             ffmpeg=ffmpeg,
         )
         await self._play_on_assistant(assistant, chat_id, stream)
+
+    async def autoplay_start(
+        self,
+        chat_id: int,
+        original_chat_id: int,
+        seed_title: str,
+        seed_vidid: str = None,
+        client: PyTgCalls = None,
+    ) -> bool:
+        """
+        Called whenever the queue runs dry. Picks a random, not-recently-played
+        related track based on the last played song's title and starts it
+        instead of leaving the call. Returns True on success, False if
+        autoplay could not find/play anything (caller should fall back to
+        the normal "queue ended" behaviour).
+        """
+        if seed_vidid:
+            remember_played(chat_id, seed_vidid)
+
+        status_msg = None
+        try:
+            status_msg = await app.send_message(
+                original_chat_id,
+                "ʜσʟᴅ ση...\n\nᴅσᴡηʟσᴧᴅɪηɢ ηєxᴛ ϻєᴅɪᴧ ғʀσϻ ᴛʜє ǫυєυє.",
+            )
+        except Exception:
+            status_msg = None
+
+        async def _fail() -> bool:
+            if status_msg:
+                try:
+                    await status_msg.delete()
+                except Exception:
+                    pass
+            return False
+
+        track = await fetch_autoplay_track(chat_id, seed_title, seed_vidid)
+        if not track:
+            return await _fail()
+
+        language = await get_lang(chat_id)
+        _ = get_string(language)
+
+        try:
+            file_path, direct = await YouTube.download(
+                track["vidid"], None, videoid=True
+        )
+                    except Exception:
+            return await _fail()
+        if not file_path:
+            return await _fail()
+
+        remember_played(chat_id, track["vidid"])
+        title = track["title"].title()
+        duration_min = track["duration_min"]
+
+        await put_queue(
+            chat_id,
+            original_chat_id,
+            file_path if direct else f"vid_{track['vidid']}",
+            title,
+            duration_min,
+            "🔁 ᴀᴜᴛᴏᴘʟᴀʏ",
+            track["vidid"],
+            1,
+            "audio",
+            forceplay=True,
+        )
+
+        stream = self._build_stream(file_path, video=False)
+        assistant = client or await group_assistant(self, chat_id)
+        try:
+            await self._play_on_assistant(assistant, chat_id, stream)
+        except Exception:
+            return await _fail()
+
+        try:
+            img = await gen_thumb(track["vidid"])
+            button = stream_markup(_, chat_id)
+            run = await app.send_photo(
+                chat_id=original_chat_id,
+                photo=img,
+                caption=_["stream_1"].format(
+                    f"https://t.me/{app.username}?start=info_{track['vidid']}",
+                    title[:23],
+                    duration_min,
+                    "ᴀᴜᴛᴏᴘʟᴀʏ 🎧",
+                ),
+                reply_markup=InlineKeyboardMarkup(button),
+            )
+            db[chat_id][0]["mystic"] = run
+            db[chat_id][0]["markup"] = "stream"
+        except Exception:
+            pass
+
+        # ==========================================
+        # 🔥 AUTOPLAY LOGGER INJECTION 🔥
+        try:
+            from SHUKLAMUSIC.utils.logger import autoplay_log
+            await autoplay_log(app, original_chat_id, title)
+        except Exception as e:
+            LOGGER(__name__).warning(f"Autoplay logger error: {e}")
+        # ==========================================
+
+        if status_msg:
+            try:
+                await status_msg.delete()
+            except Exception:
+                pass
+
+        return True
 
     async def stream_call(self, link):
         assistant = await group_assistant(self, config.LOG_GROUP_ID)
@@ -313,6 +417,16 @@ class Call(PyTgCalls):
                 await set_loop(chat_id, loop)
             await auto_clean(popped)
             if not check:
+                if popped and await is_autoplay_on(chat_id):
+                    started = await self.autoplay_start(
+                        chat_id,
+                        popped.get("chat_id", chat_id),
+                        popped.get("title"),
+                        popped.get("vidid"),
+                        client=client,
+                    )
+                    if started:
+                        return
                 await _clear_(chat_id)
                 return await client.leave_call(chat_id, close=False)
         except Exception:
