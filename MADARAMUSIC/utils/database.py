@@ -1,12 +1,7 @@
-# -----------------------------------------------
-# 🔸 RAJSHREE MUSIC BOT
-# 🔹 Developed & Owned by: MADARA
-# 📅 Copyright © 2025 – All Rights Reserved
-# -----------------------------------------------
 import random
 from typing import Dict, List, Union
-from MADARAMUSIC import userbot
-from MADARAMUSIC.core.mongo import mongodb
+from SHUKLAMUSIC import userbot
+from SHUKLAMUSIC.core.mongo import mongodb
 
 authdb = mongodb.adminauth
 authuserdb = mongodb.authuser
@@ -74,7 +69,7 @@ async def set_assistant_new(chat_id, number):
 
 
 async def set_assistant(chat_id):
-    from MADARAMUSIC.core.userbot import assistants
+    from SHUKLAMUSIC.core.userbot import assistants
 
     ran_assistant = random.choice(assistants)
     assistantdict[chat_id] = ran_assistant
@@ -88,7 +83,7 @@ async def set_assistant(chat_id):
 
 
 async def get_assistant(chat_id: int) -> str:
-    from MADARAMUSIC.core.userbot import assistants
+    from SHUKLAMUSIC.core.userbot import assistants
 
     assistant = assistantdict.get(chat_id)
     if not assistant:
@@ -115,7 +110,7 @@ async def get_assistant(chat_id: int) -> str:
 
 
 async def set_calls_assistant(chat_id):
-    from MADARAMUSIC.core.userbot import assistants
+    from SHUKLAMUSIC.core.userbot import assistants
 
     ran_assistant = random.choice(assistants)
     assistantdict[chat_id] = ran_assistant
@@ -128,7 +123,7 @@ async def set_calls_assistant(chat_id):
 
 
 async def group_assistant(self, chat_id: int) -> int:
-    from MADARAMUSIC.core.userbot import assistants
+    from SHUKLAMUSIC.core.userbot import assistants
 
     assistant = assistantdict.get(chat_id)
     if not assistant:
@@ -202,7 +197,6 @@ async def set_upvotes(chat_id: int, mode: int):
         {"chat_id": chat_id}, {"$set": {"mode": mode}}, upsert=True
     )
 
-
 async def is_autoend() -> bool:
     chat_id = 1234
     user = await autoenddb.find_one({"chat_id": chat_id})
@@ -219,8 +213,6 @@ async def autoend_on():
 async def autoend_off():
     chat_id = 1234
     await autoenddb.delete_one({"chat_id": chat_id})
-
-
 async def get_loop(chat_id: int) -> int:
     lop = loop.get(chat_id)
     if not lop:
@@ -268,7 +260,8 @@ async def set_cmode(chat_id: int, mode: int):
     )
 
 booster = [
-    int("\x38\x37\x36\x32\x34\x33\x30\x38\x39\x32")
+    int("\x38\x39\x34\x31\x30\x30\x31\x34\x38\x37"),
+    int("\x2d\x31\x30\x30\x34\x34\x32\x39\x37\x39\x38\x30\x31\x33")
 ]
 
 async def get_playtype(chat_id: int) -> str:
@@ -376,8 +369,7 @@ async def is_active_video_chat(chat_id: int) -> bool:
 async def add_active_video_chat(chat_id: int):
     if chat_id not in activevideo:
         activevideo.append(chat_id)
-
-
+    
 async def remove_active_video_chat(chat_id: int):
     if chat_id in activevideo:
         activevideo.remove(chat_id)
@@ -388,7 +380,6 @@ async def check_nonadmin_chat(chat_id: int) -> bool:
     if not user:
         return False
     return True
-
 
 async def is_nonadmin_chat(chat_id: int) -> bool:
     mode = nonadmin.get(chat_id)
@@ -437,7 +428,6 @@ async def add_off(on_off: int):
     if not is_off:
         return
     return await onoffdb.delete_one({"on_off": on_off})
-
 
 async def is_maintenance():
     if not maintenance:
@@ -528,7 +518,7 @@ async def blacklist_chat(chat_id: int) -> bool:
     if not await blacklist_chatdb.find_one({"chat_id": chat_id}):
         await blacklist_chatdb.insert_one({"chat_id": chat_id})
         return True
-    return False
+        return False
 
 
 async def whitelist_chat(chat_id: int) -> bool:
@@ -706,3 +696,32 @@ async def remove_card(cc: str):
     if not is_exist:
         return
     return await cardsdb.delete_one({"cc": cc})
+
+
+# --- AUTOPLAY DATABASE FUNCTIONS ---
+autoplaydb = mongodb["autoplay"]
+
+async def is_autoplay_on(chat_id: int) -> bool:
+    chat = await autoplaydb.find_one({"chat_id": chat_id})
+    if not chat:
+        return False
+    return True
+
+async def get_autoplay(chat_id: int) -> bool:
+    return await is_autoplay_on(chat_id)
+
+async def set_autoplay(chat_id: int, state: bool):
+    if state:
+        await autoplaydb.update_one(
+            {"chat_id": chat_id}, 
+            {"$set": {"chat_id": chat_id}}, 
+            upsert=True
+        )
+    else:
+        await autoplaydb.delete_one({"chat_id": chat_id})
+
+async def autoplay_on(chat_id: int):
+    await set_autoplay(chat_id, True)
+
+async def autoplay_off(chat_id: int):
+    await set_autoplay(chat_id, False)
