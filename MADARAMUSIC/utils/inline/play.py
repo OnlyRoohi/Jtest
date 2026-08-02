@@ -136,7 +136,7 @@ def stream_markup(_, chat_id):
         ],
         [
             InlineKeyboardButton(
-                ext="⏭ Skip",
+                text="⏭ Skip",
                 callback_data=f"ADMIN Skip|{chat_id}",
                 style=ButtonStyle.PRIMARY,
             ),
@@ -242,3 +242,4 @@ def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
         ],
     ]
     return buttons
+    
