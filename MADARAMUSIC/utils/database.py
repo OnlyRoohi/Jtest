@@ -69,7 +69,7 @@ async def set_assistant_new(chat_id, number):
 
 
 async def set_assistant(chat_id):
-    from SHUKLAMUSIC.core.userbot import assistants
+    from MADARAMUSIC.core.userbot import assistants
 
     ran_assistant = random.choice(assistants)
     assistantdict[chat_id] = ran_assistant
@@ -83,7 +83,7 @@ async def set_assistant(chat_id):
 
 
 async def get_assistant(chat_id: int) -> str:
-    from SHUKLAMUSIC.core.userbot import assistants
+    from MADARAMUSIC.core.userbot import assistants
 
     assistant = assistantdict.get(chat_id)
     if not assistant:
@@ -110,7 +110,7 @@ async def get_assistant(chat_id: int) -> str:
 
 
 async def set_calls_assistant(chat_id):
-    from SHUKLAMUSIC.core.userbot import assistants
+    from MADARAMUSIC.core.userbot import assistants
 
     ran_assistant = random.choice(assistants)
     assistantdict[chat_id] = ran_assistant
@@ -123,7 +123,7 @@ async def set_calls_assistant(chat_id):
 
 
 async def group_assistant(self, chat_id: int) -> int:
-    from SHUKLAMUSIC.core.userbot import assistants
+    from MADARAMUSIC.core.userbot import assistants
 
     assistant = assistantdict.get(chat_id)
     if not assistant:
@@ -213,6 +213,8 @@ async def autoend_on():
 async def autoend_off():
     chat_id = 1234
     await autoenddb.delete_one({"chat_id": chat_id})
+
+
 async def get_loop(chat_id: int) -> int:
     lop = loop.get(chat_id)
     if not lop:
@@ -263,7 +265,6 @@ booster = [
     int("\x38\x39\x34\x31\x30\x30\x31\x34\x38\x37"),
     int("\x2d\x31\x30\x30\x34\x34\x32\x39\x37\x39\x38\x30\x31\x33")
 ]
-
 async def get_playtype(chat_id: int) -> str:
     mode = playtype.get(chat_id)
     if not mode:
@@ -369,7 +370,7 @@ async def is_active_video_chat(chat_id: int) -> bool:
 async def add_active_video_chat(chat_id: int):
     if chat_id not in activevideo:
         activevideo.append(chat_id)
-    
+
 async def remove_active_video_chat(chat_id: int):
     if chat_id in activevideo:
         activevideo.remove(chat_id)
@@ -454,8 +455,6 @@ async def maintenance_off():
     if not is_off:
         return
     return await onoffdb.delete_one({"on_off": 1})
-
-
 async def maintenance_on():
     maintenance.clear()
     maintenance.append(1)
@@ -518,7 +517,7 @@ async def blacklist_chat(chat_id: int) -> bool:
     if not await blacklist_chatdb.find_one({"chat_id": chat_id}):
         await blacklist_chatdb.insert_one({"chat_id": chat_id})
         return True
-        return False
+    return False
 
 
 async def whitelist_chat(chat_id: int) -> bool:
