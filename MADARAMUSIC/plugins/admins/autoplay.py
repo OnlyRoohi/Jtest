@@ -9,9 +9,9 @@ from pyrogram.types import (
 )
 from pyrogram.errors import MessageNotModified
 
-from SHUKLAMUSIC import app
-from SHUKLAMUSIC.utils.database import get_autoplay, set_autoplay
-from SHUKLAMUSIC.utils.decorators import AdminRightsCheck
+from MADARAMUSIC import app
+from MADARAMUSIC.utils.database import get_autoplay, set_autoplay
+from MADARAMUSIC.utils.decorators import AdminRightsCheck
 from config import BANNED_USERS
 
 PHOTO_URL = "https://files.catbox.moe/6r97s4.jpg"
