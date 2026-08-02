@@ -230,6 +230,7 @@ class Call(PyTgCalls):
             await assistant.leave_call(chat_id, close=False)
         except Exception:
             pass
+
     async def skip_stream(
         self,
         chat_id: int,
@@ -251,8 +252,7 @@ class Call(PyTgCalls):
             ffmpeg=ffmpeg,
         )
         await self._play_on_assistant(assistant, chat_id, stream)
-
-    async def autoplay_start(
+            async def autoplay_start(
         self,
         chat_id: int,
         original_chat_id: int,
@@ -297,9 +297,10 @@ class Call(PyTgCalls):
         try:
             file_path, direct = await YouTube.download(
                 track["vidid"], None, videoid=True
-        )
-                    except Exception:
+            )
+        except Exception:
             return await _fail()
+            
         if not file_path:
             return await _fail()
 
@@ -451,6 +452,7 @@ class Call(PyTgCalls):
             db[chat_id][0]["speed_path"] = None
             db[chat_id][0]["speed"] = 1.0
         video = True if str(streamtype) == "video" else False
+        
         if "live_" in queued:
             n, link = await YouTube.video(videoid, True)
             if n == 0:
@@ -481,6 +483,7 @@ class Call(PyTgCalls):
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
+            
         elif "vid_" in queued:
             mystic = await app.send_message(original_chat_id, _["call_7"])
             try:
@@ -537,6 +540,7 @@ class Call(PyTgCalls):
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
+            
         else:
             stream = self._build_stream(queued, video=video)
             try:
@@ -642,3 +646,4 @@ class Call(PyTgCalls):
                         await self.stop_stream(update.chat_id)
 
 MADARA = Call()
+        
