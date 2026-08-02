@@ -41,7 +41,7 @@ async def skip(cli, message: Message, _, chat_id):
                             if not check:
                                 started = False
                                 if popped and await is_autoplay_on(chat_id):
-                                    started = await SHUKLA.autoplay_start(
+                                    started = await MADARA.autoplay_start(
                                         chat_id,
                                         popped.get("chat_id", chat_id),
                                         popped.get("title"),
@@ -57,7 +57,7 @@ async def skip(cli, message: Message, _, chat_id):
                                         ),
                                         reply_markup=close_markup(_),
                                     )
-                                    await SHUKLA.stop_stream(chat_id)
+                                    await MADARA.stop_stream(chat_id)
                                 except:
                                     pass
                                 return
@@ -79,7 +79,7 @@ async def skip(cli, message: Message, _, chat_id):
             if not check:
                 started = False
                 if popped and await is_autoplay_on(chat_id):
-                    started = await SHUKLA.autoplay_start(
+                    started = await MADARA.autoplay_start(
                         chat_id,
                         popped.get("chat_id", chat_id),
                         popped.get("title"),
@@ -94,7 +94,7 @@ async def skip(cli, message: Message, _, chat_id):
                     reply_markup=close_markup(_),
                 )
                 try:
-                    return await SHUKLA.stop_stream(chat_id)
+                    return await MADARA.stop_stream(chat_id)
                 except:
                     return
         except:
@@ -105,7 +105,7 @@ async def skip(cli, message: Message, _, chat_id):
                     ),
                     reply_markup=close_markup(_),
                 )
-                return await SHUKLA.stop_stream(chat_id)
+                return await MADARA.stop_stream(chat_id)
             except:
                 return
 
@@ -133,7 +133,7 @@ async def skip(cli, message: Message, _, chat_id):
         except:
             image = None
         try:
-            await SHUKLA.skip_stream(chat_id, link, video=status, image=image)
+            await MADARA.skip_stream(chat_id, link, video=status, image=image)
         except:
             return await message.reply_text(_["call_6"])
         button = stream_markup(_, chat_id)
@@ -167,7 +167,7 @@ async def skip(cli, message: Message, _, chat_id):
         except:
             image = None
         try:
-            await SHUKLA.skip_stream(chat_id, file_path, video=status, image=image)
+            await MADARA.skip_stream(chat_id, file_path, video=status, image=image)
         except:
             return await mystic.edit_text(_["call_6"])
         button = stream_markup(_, chat_id)
@@ -188,7 +188,7 @@ async def skip(cli, message: Message, _, chat_id):
 
     elif "index_" in queued:
         try:
-            await SHUKLA.skip_stream(chat_id, videoid, video=status)
+            await MADARA.skip_stream(chat_id, videoid, video=status)
         except:
             return await message.reply_text(_["call_6"])
         button = stream_markup(_, chat_id)
@@ -211,7 +211,7 @@ async def skip(cli, message: Message, _, chat_id):
             except:
                 image = None
         try:
-            await SHUKLA.skip_stream(chat_id, queued, video=status, image=image)
+            await MADARA.skip_stream(chat_id, queued, video=status, image=image)
         except:
             return await message.reply_text(_["call_6"])
 
