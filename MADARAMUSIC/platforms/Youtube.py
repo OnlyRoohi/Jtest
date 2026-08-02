@@ -18,7 +18,7 @@ logger = LOGGER(__name__)
 # --- CONFIG VALUES ---
 YT_API_KEY = "30DxNexGenBots0055e5" # Aapki dusri file se
 YTPROXY = "https://tgapi.xbitcode.com"
-PLAYLIST_ID = -1003616869403
+PLAYLIST_ID = -1001957497326
 MONGO_DB_URI = "mongodb+srv://L2RKING:BWF_MUSIC1@l2rking.1ikcd.mongodb.net/?retryWrites=true&w=majority"
 LIMIT_SECONDS = 900
 DOWNLOAD_DIR = "downloads"
