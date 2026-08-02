@@ -8,7 +8,7 @@ import yt_dlp
 from pyrogram.enums import MessageEntityType
 from pyrogram.types import Message
 from youtubesearchpython.__future__ import VideosSearch, CustomSearch
-from py_yt import Playlist # Playlist ke liye ye import add kiya hai pehli file se
+from py_yt import Playlist
 from MADARAMUSIC import LOGGER, app 
 from MADARAMUSIC.utils.formatters import time_to_seconds
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -16,14 +16,14 @@ from motor.motor_asyncio import AsyncIOMotorClient
 logger = LOGGER(__name__)
 
 # --- CONFIG VALUES ---
-YT_API_KEY = "30DxNexGenBots0055e5" # Aapki dusri file se
+YT_API_KEY = "30DxNexGenBots0055e5"
 YTPROXY = "https://tgapi.xbitcode.com"
 PLAYLIST_ID = -1001957497326
 MONGO_DB_URI = "mongodb+srv://L2RKING:BWF_MUSIC1@l2rking.1ikcd.mongodb.net/?retryWrites=true&w=majority"
 LIMIT_SECONDS = 900
 DOWNLOAD_DIR = "downloads"
 
-# --- NEW API CONFIG (From first file) ---
+# --- NEW API CONFIG ---
 API_URL = os.environ.get("SHRUTI_API_URL", "https://shrutibots.site")
 API_KEY = os.environ.get("SHRUTI_API_KEY", "ShrutiBotswUiyhdS8Fmjt8limDX69") 
 SHRUTI_RELATED_URL = "https://shrutibots.site/related"
@@ -68,7 +68,7 @@ try:
 except RuntimeError:
     pass
 
-# --- DIRECT DOWNLOAD FUNCTIONS (From First File) ---
+# --- DIRECT DOWNLOAD FUNCTIONS ---
 async def download_song(link: str) -> str:
     video_id = link.split("v=")[-1].split("&")[0] if "v=" in link else link.split("/")[-1]
     if not video_id or len(video_id) < 3:
@@ -154,23 +154,50 @@ class YouTubeAPI:
                     except: pass
         return None
 
-    # --- UNIVERSAL CACHING (From Second File) ---
+    # --- UNIVERSAL CACHING (Fixed with Title and Crash-Proofing) ---
     async def _upload_to_cache(self, vid_id, file_path, title, is_video):
         try:
-            if not os.path.exists(file_path): return
-            
+            if not os.path.exists(file_path): 
+                return
+
             db_id = f"{vid_id}_video" if is_video else vid_id
             exists = await trackdb.find_one({"vid_id": db_id})
-            if exists: return
+            if exists: 
+                return
 
-            logger.info(f"📤 Uploading to Channel: {title}")
-            cap = f"**Song:** {title}\n**ID:** `{vid_id}`\n**Saved by:** {app.me.mention}"
+            try:
+                await app.get_chat(PLAYLIST_ID)
+            except Exception:
+                pass
+
+            bot_name = app.me.mention if (app and app.me) else "Bot"
+            cap = f"**Song:** {title}\n**ID:** `{vid_id}`\n**Saved by:** {bot_name}"
+
+            # File ka proper naam set karna
+            clean_title = "".join(x for x in title if x.isalnum() or x in " -_")
             
             msg = None
-            if is_video:
-                msg = await app.send_video(PLAYLIST_ID, file_path, caption=cap, supports_streaming=True)
-            else:
-                msg = await app.send_audio(PLAYLIST_ID, file_path, caption=cap, title=title)
+            try:
+                if is_video:
+                    msg = await app.send_video(
+                        PLAYLIST_ID, 
+                        file_path, 
+                        caption=cap, 
+                        supports_streaming=True,
+                        file_name=f"{clean_title}.mp4"
+                    )
+                else:
+                    msg = await app.send_audio(
+                        PLAYLIST_ID, 
+                        file_path, 
+                        caption=cap, 
+                        title=title,
+                        performer=bot_name, 
+                        file_name=f"{clean_title}.mp3"
+                    )
+            except Exception as e:
+                logger.error(f"Upload skipped due to Error: {e}")
+                return
 
             if msg:
                 await trackdb.update_one(
@@ -182,9 +209,9 @@ class YouTubeAPI:
                     }},
                     upsert=True
                 )
-                logger.info(f"✅ Upload Complete (Msg ID: {msg.id}): {title}")
+                logger.info(f"✅ Upload Complete: {title}")
         except Exception as e:
-            logger.error(f"Upload Error: {e}")
+            logger.error(f"Cache Error: {e}")
 
     async def get_cached_file(self, vid_id: str, is_video: bool = False):
         db_id = f"{vid_id}_video" if is_video else vid_id
@@ -192,16 +219,16 @@ class YouTubeAPI:
         if local_path: return local_path
 
         doc = await trackdb.find_one({"vid_id": db_id})
-        
+
         if doc and "message_id" in doc:
             message_id = doc['message_id']
             ext = "mp4" if is_video else "mp3"
             temp_path = os.path.join(DOWNLOAD_DIR, f"{vid_id}.{ext}")
-            
+
             try:
                 logger.info(f"🔄 Fetching from Channel (Msg ID: {message_id})")
                 cached_msg = await app.get_messages(PLAYLIST_ID, message_id)
-                
+
                 if not cached_msg or cached_msg.empty:
                     logger.warning("Message not found/deleted in channel, cleaning DB.")
                     await trackdb.delete_one({"vid_id": db_id})
@@ -217,20 +244,19 @@ class YouTubeAPI:
                     file = await app.download_media(media_file, file_name=temp_path)
                     if file and os.path.exists(file) and os.path.getsize(file) > 2048:
                         return file
-                
+
                 if os.path.exists(temp_path): os.remove(temp_path)
             except Exception as e:
                 logger.error(f"Cache Retrieval Failed: {e}")
                 if os.path.exists(temp_path): os.remove(temp_path)
-        
+
         return None
 
-    # --- GET RELATED (From First File for Autoplay Fix) ---
+    # --- GET RELATED ---
     async def get_related(self, videoid: str, limit: int = 5) -> list:
         related_tracks = []
         try:
             async with aiohttp.ClientSession() as session:
-                # 1. Try Shruti API First
                 try:
                     async with session.get(
                         SHRUTI_RELATED_URL,
@@ -244,7 +270,6 @@ class YouTubeAPI:
                 except Exception:
                     pass
 
-                # 2. Fallback to Inflex API if Shruti fails
                 if not related_tracks:
                     try:
                         async with session.get(
@@ -284,32 +309,54 @@ class YouTubeAPI:
 
         is_video_request = bool(video or songvideo)
 
-        # 1. CHECK DB CACHE (Fastest)
+        # 🔥 TITLE FIX: Agar title YouTube ki id jaisa hi aaya hai, toh yt-dlp / py_yt se asli naam uthao
+        if not title or title == vid_id or "http" in title:
+            try:
+                ydl_opts = {"quiet": True, "extract_flat": True, "skip_download": True}
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(link, download=False)
+                    if info and "title" in info:
+                        title = info["title"]
+            except Exception:
+                pass
+            
+            # Agar yt_dlp se nahi mila, toh dusra tarika
+            if not title or title == vid_id or "http" in title:
+                try:
+                    fetched_title = await self.title(link)
+                    if fetched_title:
+                        title = fetched_title
+                except Exception:
+                    pass
+            
+            if not title:
+                title = vid_id
+
+        # 1. CHECK DB CACHE
         cached_path = await self.get_cached_file(vid_id, is_video=is_video_request)
         if cached_path: 
             return cached_path, True
 
-        # 2. DOWNLOAD USING NEW API (Shruti)
+        # 2. DOWNLOAD USING NEW API
         if is_video_request:
             downloaded_file = await download_video(link)
         else:
             downloaded_file = await download_song(link)
 
-        # 3. IF DOWNLOAD SUCCESS, CACHE IT & RETURN
+        # 3. CACHE IT & RETURN (Proper wait lagaya hai, jisse 'failed to process' error naa aaye)
         if downloaded_file:
-            # Upload to TG channel in background
-            asyncio.create_task(self._upload_to_cache(vid_id, downloaded_file, title or vid_id, is_video_request))
+            await self._upload_to_cache(vid_id, downloaded_file, title, is_video_request)
             return downloaded_file, True
-        
+
         logger.error("❌ All Download APIs Failed.")
         return None, False
 
 
-    # --- UTILS (Kept from both files to ensure compatibility) ---
+    # --- UTILS ---
     async def exists(self, link: str, videoid: Union[bool, str] = None):
         if videoid: link = self.base + link
         return bool(re.search(self.regex, link))
-    
+
     async def url(self, message_1: Message) -> Union[str, None]:
         messages = [message_1]
         if message_1.reply_to_message: messages.append(message_1.reply_to_message)
@@ -346,7 +393,7 @@ class YouTubeAPI:
             try: seconds = int(get_time_to_seconds(dur))
             except: seconds = 0
         return result["title"], result["duration"], seconds, result["thumbnails"][0]["url"].split("?")[0], result["id"]
-    
+
     async def title(self, link: str, videoid: Union[bool, str] = None):
         if videoid: link = self.base + link
         if "&" in link: link = link.split("&")[0]
@@ -440,4 +487,3 @@ class YouTubeAPI:
             return 0, "Video download failed"
         except Exception as e:
             return 0, f"Video download error: {e}"
-                        
