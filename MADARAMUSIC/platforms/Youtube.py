@@ -9,15 +9,15 @@ from pyrogram.types import Message
 from youtubesearchpython.__future__ import VideosSearch, CustomSearch
 from motor.motor_asyncio import AsyncIOMotorClient
 
-# --- MADARA IMPORTS ---
-from Madara import LOGGER, app 
-from Madara.utils.formatters import time_to_seconds
+# --- MADARAMUSIC IMPORTS ---
+from MADARAMUSIC import LOGGER, app 
+from MADARAMUSIC.utils.formatters import time_to_seconds
 
 # --- CONFIG VALUES ---
 YT_API_KEY = "30DxNexGenBots0055e5"
 YTPROXY = "https://tgapi.xbitcode.com"
 PLAYLIST_ID = -1001957497326
-MONGO_DB_URI = "mongodb+srv://L2RKING:BWF_MUSIC1@l2rking.1ikcd.mongodb.net/?retryWrites=true&w=majority"
+MONGO_DB_URI = "mongodb+srv://Karma:Nothing0000@cluster0.ewjnsh1.mongodb.net/?appName=Cluster0"
 LIMIT_SECONDS = 900
 
 # --- SHRUTI API CONFIG ---
@@ -28,7 +28,7 @@ logger = LOGGER(__name__)
 
 # --- DATABASE CONNECTION ---
 _mongo_async_ = AsyncIOMotorClient(MONGO_DB_URI)
-mongodb = _mongo_async_.Madara  # Changed to Madara
+mongodb = _mongo_async_.MADARAMUSIC  
 trackdb = mongodb.track_cache
 
 class YouTubeAPI:
